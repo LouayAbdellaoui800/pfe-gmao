@@ -58,7 +58,7 @@ app.set('views','views');
 
 
 
-// app.use(multer({dest:'images/'}).single('image'))
+//app.use(multer({dest:'images/'}).single('image'))
 app.use(reportController);
 app.use(editController);
 app.use(deleteController);

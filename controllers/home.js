@@ -22,19 +22,19 @@ exports.homeSignIn=(req,res) => {
 exports.signIn = (req, res) => {
     const { email, password } = req.body;
     if (email === 'admin@gmail.com' && password === '0000') {
-      const token = jwt.sign({ email }, secretKey);
-      res.cookie('token', token, { httpOnly: true });
+        const token = jwt.sign({ email: email, role: 'admin' }, process.env.JWT_SECRET_KEY);
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
       res.redirect('/home');
+     
     } else {
       Technicien.findOne({ where: { Email: email } }).then((technicien) => {
         if (technicien) {
           bcrypt.compare(password, technicien.Password).then((result) => {
             if (result) {
-              const token = jwt.sign({ email }, secretKey);
-              req.session.loggedin = true;
-              req.session.ID = technicien.ID;
-              res.cookie('token', token, { httpOnly: true });
-              res.redirect('/ChefService/dialyInspection');
+                const token = jwt.sign({ email: email, role: 'user', id: technicien.ID }, process.env.JWT_SECRET_KEY);
+                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
+                req.session.ID = technicien.ID;
+                res.redirect('/ChefService/dialyInspection');
             } else {
               res.redirect('/');
             }
@@ -50,6 +50,7 @@ exports.home=(req,res) =>{
     res.render('home',{pageTitle:'Home',Home:true});
 }
 exports.dialyInspectionChef=(req,res) =>{
+    
     ChefID=req.session.ID
     Equipment.findAll({include:[{model:Department}]}).then(equipments => {
         const eqs=equipments.map(equipment => {
@@ -327,9 +328,12 @@ exports.panneChef=(req,res)=>{
                     Department:equipment.Department.Name
                 }
             })
+
         res.render('Panne',{layout:"ChefserviceLayout",pageTitle:'Panne',BreakDown:true,PN:bd,
                                     hasBreakDown:bd.length>0,Equipments:eqs});
         })
+        
+        
 
     }).catch(err => {
         if(err)
