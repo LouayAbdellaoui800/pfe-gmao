@@ -70,7 +70,6 @@ exports.editChefService=(req,res) => {
 
 exports.editEquipment=(req,res)=>{
     code=req.params.id
-    console.log("here")
     Equipment.findOne({where:{Code:code},include:[{model:Department}]}).then(equipment => {
         const eq = {
               Code: equipment.Code,
@@ -92,14 +91,7 @@ exports.editEquipment=(req,res)=>{
               Mecanique:equipment.Department.Name =='Mecanique' ? true:false,
               Industrielle:equipment.Department.Name=='Industrielle' ? true:false,
             }
-   if(eq.PM =="Annualy"){
-      res.render('editEquipment',{layout:'main-layout.handlebars' ,pageTitle:'Edit',
-                                       Equipment:true,equipment:eq,A:true});
-
-   }else{
-      res.render('editEquipment',{layout:'main-layout.handlebars' ,pageTitle:'Edit',
-            Equipment:true,equipment:eq,M:true});
-   }     
+     
    res.render('editEquipment',{layout:'main-layout.handlebars' ,pageTitle:'Edit',
                                       Equipment:true,equipment:eq});  
     
@@ -149,7 +141,24 @@ exports.editBreakDown=(req,res)=>{
 
 
 }
+exports.editPanneChef=(req,res)=>{
+   code=req.params.id
+   BreakDown.findByPk(code).then(breakDown =>{ 
+       const bd = {
+         Code:breakDown.Code,
+         Reason:breakDown.Reason,
+         DATE:breakDown.DATE,
+         EquipmentCode:breakDown.EquipmentCode
+           }
+   
+       
+   res.render('editPanneChef',{layout:'ChefserviceLayout' ,pageTitle:'Edit',
+                                                   BreakDown:true,breakDown:bd});
+})
+   .catch(err => console.log("ERROR!!!!!!",err) )
 
+
+}
 exports.editWorkOrder=(req,res)=>{
    code = req.params.id
    WorkOrder.findByPk(code).then(workOrder=>{

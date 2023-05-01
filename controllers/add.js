@@ -272,7 +272,35 @@ exports.addBreakDown=(req,res)=>{
     })
 
 }
+exports.addPanneChef=(req,res)=>{
+    code=req.body.Code
+    reason=req.body.Reason
+    date=req.body.DATE
+    equipmentId=req.body.EquipmentCode
+    Equipment.findOne({where:{Code:equipmentId}}).then(Equipment =>{
+        if(Equipment){
+            BreakDowns.findByPk(code).then(breakD=>{
+                if(breakD){
+                    breakD.Code=code
+                    breakD.Reason=reason
+                    breakD.DATE=date
+                    breakD.EquipmentCode=equipmentId
+                    breakD.save().then(res.redirect('/chefservice/panne'))
+                }
+        
+                BreakDowns.create({Code:code,Reason:reason,DATE:date,EquipmentCode:equipmentId})
+                .then(res.redirect('/chefservice/panne'))
+                .catch(err=> {
+                    console.log("ERROR!!!!!!",err)
+                    })
+                })
+        }
+        else
+         return res.render('error',{layout:"ChefserviceLayout",pageTitle:'Error',href:'/chefservice/panne',message:'Sorry !!! Could Not Get this Equipment'})
+        
+    })
 
+}
 exports.addWorkOrder=(req,res) => {
     code =req.body.Code
     cost=req.body.Cost

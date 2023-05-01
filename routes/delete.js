@@ -8,6 +8,7 @@ router.get('/chefservice/delete/:id',deleteController.deleteTechnicien);
 router.get('/equipment/delete/:id',deleteController.deleteEquipment);
 router.get('/sparePart/delete/:id',deleteController.deleteSparePart);
 router.get('/breakDown/delete/:id',deleteController.deleteBreakDown);
+router.get('/chefservice/panne/delete/:id',deleteController.deletepanneChef);
 router.get('/workOrder/delete/:id',deleteController.deleteWorkOrder);
 router.get('/maintenance/delete/:id',deleteController.deleteMaintenance);
 

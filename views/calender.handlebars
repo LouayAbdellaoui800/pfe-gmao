@@ -70,9 +70,9 @@
                     <a class="js-arrow" href="/ChefService/workOrder">
                         <i class="fas fa-copy"></i>work Orders</a>
                 </li> 
-                 <li class="{{#if WO }}active{{/if}} has-sub">
-                    <a class="js-arrow" href="/ChefService/workOrder">
-                        <i class="fas fa-copy"></i>Maintenance</a>
+                 <li class="{{#if PN }}active{{/if}} has-sub">
+                    <a class="js-arrow" href="/ChefService/panne">
+                        <i class="fas fa-copy"></i>Panne</a>
                 </li> 
     
                     </ul>
@@ -114,7 +114,7 @@
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">
-                                            <img src="images/{{Engineer.Image}}" alt="John Doe" />
+                                            <img src="images/{{Chef.Image}}" alt="John Doe" />
                                         </div>
                                         <div class="content">
                                             <a class="js-acc-btn" href="#">GMAO</a>
@@ -123,14 +123,14 @@
                                             <div class="info clearfix">
                                                 <div class="image">
                                                     <a href="#">
-                                                        <img src="images/{{Engineer.Image}}" alt="John Doe" />
+                                                        <img src="images/{{Chef.Image}}" alt="John Doe" />
                                                     </a>
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">{{Engineer.FName}} {{Engineer.LName}}</a>
+                                                        <a href="#">{{Chef.FName}} {{Chef.LName}}</a>
                                                     </h5>
-                                                    <span class="email">Clinical Engineer</span>
+                                                    <span class="email">Technicien</span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__body">

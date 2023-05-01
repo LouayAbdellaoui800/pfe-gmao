@@ -11,37 +11,40 @@ const DailyInspection = require('../models/dialy_inspection');
 const PpmQuestions =require('../models/ppm_questions')
 const PPM =require('../models/ppm')
 const moment=require('moment')
-
+const jwt = require('jsonwebtoken');
+require("dotenv").config();
+const secretKey = process.env.JWT_SECRET_KEY;
 exports.homeSignIn=(req,res) => {
     res.render('newHome',{layout:false});
 }
 
 
-exports.signIn=(req,res) => {
-   email=req.body.email
-   pass=req.body.password
-   if(email == 'admin@gmail.com' && pass==0000){
-    res.redirect('/home');  
-   }
-   else{
-    Technicien.findOne({where:{Email:email}}).then(ChefdeService => {
-           if(ChefdeService){
-            bcrypt.compare(pass, ChefdeService.Password).then(result => {
-                if(result){
-                 req.session.ID=ChefdeService.ID
-                 res.redirect('/ChefService/dialyInspection');  
-                }
-                else
-                 res.redirect('/')    
-                })
-           }
-           else
-           res.redirect('/')    
-            
-       })
-   }
-   
-}
+exports.signIn = (req, res) => {
+    const { email, password } = req.body;
+    if (email === 'admin@gmail.com' && password === '0000') {
+      const token = jwt.sign({ email }, secretKey);
+      res.cookie('token', token, { httpOnly: true });
+      res.redirect('/home');
+    } else {
+      Technicien.findOne({ where: { Email: email } }).then((technicien) => {
+        if (technicien) {
+          bcrypt.compare(password, technicien.Password).then((result) => {
+            if (result) {
+              const token = jwt.sign({ email }, secretKey);
+              req.session.loggedin = true;
+              req.session.ID = technicien.ID;
+              res.cookie('token', token, { httpOnly: true });
+              res.redirect('/ChefService/dialyInspection');
+            } else {
+              res.redirect('/');
+            }
+          });
+        } else {
+          res.redirect('/');
+        }
+      });
+    }
+  };
 
 exports.home=(req,res) =>{
     res.render('home',{pageTitle:'Home',Home:true});
@@ -62,7 +65,7 @@ exports.dialyInspectionChef=(req,res) =>{
                 FName:chef.FName,
                 LName:chef.LName
             }
-        res.render('dialyInspectionForm',{layout:'clinicalEngineerLayout',pageTitle:'Dialy Inspection',
+        res.render('dialyInspectionForm',{layout:'ChefserviceLayout',pageTitle:'Dialy Inspection',
         DI:true,equipments:eqs,Chef:Chef})
         })
     })
@@ -79,7 +82,7 @@ exports.dialyInspectionChefPost=(req,res) =>{
  q6 = req.body.Q6
  q7 = req.body.Q7
  q8 = req.body.Q8
- equipmentId = req.body.Device
+ equipmentId = req.body.equipement
  ChefID=req.session.ID
 
 
@@ -100,7 +103,7 @@ exports.dialyInspectionChefPost=(req,res) =>{
      if(equipment){
         Technicien.findByPk(ChefID).then(chefService =>{
              if(chefService){
-                    DailyInspection.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,Q6:q6,Q7:q7,Q8:q8,EquipmentCode:equipmentId,ChefServiceID:ChefID})
+                    DailyInspection.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,Q6:q6,Q7:q7,Q8:q8,EquipmentCode:equipmentId,TechnicienID:ChefID})
                         .then(dailyinspection => res.redirect('/chefservice/dialyInspection') )
             }
             else{
@@ -133,13 +136,13 @@ exports.ppmChef=(req,res) =>{
                 Department:report.Equipment.Department.Name
             }
         })
-        Technicien.findByPk(ChefID).then(chef => {
+        Technicien.findByPk(ChefID).then(chef=> {
             const Chef ={
                 Image:chef.Image,
                 FName:chef.FName,
                 LName:chef.LName
             }
-            res.render('deviceForm',{layout:'clinicalEngineerLayout',pageTitle:'Dialy Inspection',
+            res.render('deviceForm',{layout:'ChefserviceLayout',pageTitle:'PPM',
                 PPM:true,equipments:eqs,Chef:Chef})
         })
     })
@@ -150,7 +153,7 @@ exports.ppmChefPost=(req,res) =>{
     res.redirect('/chefservice/ppm/'+code);
 }
 
-exports.ppmChefEquipment =(req,res) => {
+ exports.ppmChefEquipment =(req,res) => { 
     code=req.params.code
     ChefID=req.session.ID
     PpmQuestions.findOne({where:{EquipmentCode:code}}).then(ppm => {
@@ -161,18 +164,18 @@ exports.ppmChefEquipment =(req,res) => {
             Q4:ppm.Q4,
             Q5:ppm.Q5
         }
-        Technicien.findByPk(ChefID).then(chef => {
-            const Chef ={
-                Image:chef.Image,
-                FName:chef.FName,
-                LName:chef.LName
-            }
-
-        res.render('ppmForm',{layout:'clinicalEngineerLayout',pageTitle:'Dialy Inspection',
-            PPM:true,ppm:Ppm,Code:code,Chef:Chef})
-        })
-    })
+       Technicien.findByPk(ChefID).then(chef=> {
+           const Chef ={
+               Image:chef.Image,
+               FName:chef.FName,
+               LName:chef.LName
+           }
+           res.render('ppmForm',{layout:'ChefserviceLayout',pageTitle:'Dialy Inspection',
+           ppm:true,Code:code,Chef:Chef})
+       })
+   })
 }
+
 exports.ppmChefEquipmentPost=(req,res) =>{
     date=req.body.DATE
     equipmentId=req.params.Code
@@ -197,7 +200,7 @@ exports.ppmChefEquipmentPost=(req,res) =>{
         if(equipment){
             Technicien.findByPk(ChefID).then(chefService =>{
                 if(chefService){
-                       PPM.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,N1:n1,N2:n2,N3:n3,N4:n4,N5:n5,EquipmentCode:equipmentId,ChefServiceID:ChefID})
+                       PPM.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,N1:n1,N2:n2,N3:n3,N4:n4,N5:n5,EquipmentCode:equipmentId,TechnicienID:ChefID})
                            .then(dailyinspection => res.redirect('/chefservice/ppm') )
                }
                else{
@@ -302,6 +305,36 @@ exports.maintenance=(req,res)=>{
     })
 
 
+}
+exports.panneChef=(req,res)=>{
+    BreakDown.findAll({include:[{model:Equipment,include:[{model:Department}]}]}).then(breakdowns => {
+        const bd = breakdowns.map(breakD => {
+                  return {
+                    Code:breakD.Code,
+                    Reason:breakD.Reason,
+                    DATE:breakD.DATE,
+                    EquipmentCode:breakD.EquipmentCode,
+                    EquipmentName:breakD.Equipment.Name,
+                    EquipmentImage:breakD.Equipment.Image,
+                    Department:breakD.Equipment.Department.Name
+                  }
+                })
+        Equipment.findAll({include:[{model:Department}]}).then(equipments => {
+            const eqs = equipments.map(equipment => {
+                return{
+                    Name:equipment.Name,
+                    Code:equipment.Code,
+                    Department:equipment.Department.Name
+                }
+            })
+        res.render('Panne',{layout:"ChefserviceLayout",pageTitle:'Panne',BreakDown:true,PN:bd,
+                                    hasBreakDown:bd.length>0,Equipments:eqs});
+        })
+
+    }).catch(err => {
+        if(err)
+        res.render('error',{layout:false,pageTitle:'Error',href:'/home',message:'Sorry !!! Could Not Get BreakDowns'})
+    })
 }
 exports.chefService=(req,res)=>{
     Technicien.findAll({
@@ -662,7 +695,7 @@ exports.workorderDescription=(req,res)=>{
                 FName:chef.FName,
                 LName:chef.LName
             }
-        res.render('workOrderDetails',{layout:'clinicalEngineerLayout',pageTitle:'Work Order',
+        res.render('workOrderDetails',{layout:'ChefserviceLayout',pageTitle:'Work Order',
                 WO:true,order:order,Chef,Chef})
         })    
     }).catch(err => {

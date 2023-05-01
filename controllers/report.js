@@ -1,6 +1,6 @@
 Equipment=require('../models/equipment')
 AgentSupplier=require('../models/agent_supplier')
-const Technicien=require('../models/chef_Service')
+Technicien=require('../models/chef_Service')
 Department=require('../models/department')
 SparePart=require('../models/spare_part')
 DialyInspection=require('../models/dialy_inspection')
@@ -203,13 +203,13 @@ exports.equipmentDialyInspectionReport=(req,res) => {
         name=eq.Name
         model=eq.Model
         image=eq.Image
-        DialyInspection.findAll({where:{EquipmentCode:id},include:[{model:Equipment},{model:ClinicalEngineer}]})
+        DialyInspection.findAll({where:{EquipmentCode:id},include:[{model:Equipment},{model:Technicien}]})
         .then(reports => {
             const reps=reports.map(report => {
                 return{
                     Code:report.Code,
                     DATE:report.DATE,
-                    Engineer:report.ClinicalEnginner.FName +' '+ report.ClinicalEnginner.LName ,
+                    Engineer:report.Technicien.FName +' '+ report.Technicien.LName ,
                     Equipment:report.Equipment.Name,
                     EquipmentModel:report.Equipment.Model
                 }
@@ -233,10 +233,10 @@ exports.dialyInspectionReport = (req,res) =>{
  layout=req.query.report ? 'main-layout' :'equipmentReportLayout' 
  di=req.query.report ? false : true
  Reports=req.query.report ? true : false
- DialyInspection.findOne({where:{Code:code},include:[{model:ClinicalEngineer},{model:Equipment}]}).then(report =>{
+ DialyInspection.findOne({where:{Code:code},include:[{model:Technicien},{model:Equipment}]}).then(report =>{
     const rep = {
         DATE:report.DATE,
-        Engineer:report.ClinicalEnginner.FName+' '+report.ClinicalEnginner.LName,
+        Engineer:report.Technicien.FName+' '+report.Technicien.LName,
         EquipmentName:report.Equipment.Name,
         EquipmentCode:report.Equipment.Code,
         EquipmentModel:report.Equipment.Model,
@@ -274,13 +274,13 @@ exports.equipmentPpmReport=(req,res) => {
         name=eq.Name
         model=eq.Model
         image=eq.Image
-        PPM.findAll({where:{EquipmentCode:id},include:[{model:Equipment},{model:ClinicalEngineer}]})
+        PPM.findAll({where:{EquipmentCode:id},include:[{model:Equipment},{model:Technicien}]})
         .then(reports => {
             const reps=reports.map(report => {
                 return{
                     Code:report.Code,
                     DATE:report.DATE,
-                    Engineer:report.ClinicalEnginner.FName +' '+ report.ClinicalEnginner.LName ,
+                    Engineer:report.Technicien.FName +' '+ report.Technicien.LName ,
                     Equipment:report.Equipment.Name,
                     EquipmentModel:report.Equipment.Model
                 }
@@ -304,10 +304,10 @@ exports.PpmReport = (req,res) =>{
     layout=req.query.report ? 'main-layout' :'equipmentReportLayout' 
     ppm=req.query.report ? false : true
     Reports=req.query.report ? true : false
-    PPM.findOne({where:{Code:code},include:[{model:ClinicalEngineer},{model:Equipment}]}).then(report =>{
+    PPM.findOne({where:{Code:code},include:[{model:Technicien},{model:Equipment}]}).then(report =>{
        const rep = {
            DATE:report.DATE,
-           Engineer:report.ClinicalEnginner.FName+' '+report.ClinicalEnginner.LName,
+           Engineer:report.Technicien.FName+' '+report.Technicien.LName,
            EquipmentName:report.Equipment.Name,
            EquipmentCode:report.Equipment.Code,
            EquipmentModel:report.Equipment.Model,

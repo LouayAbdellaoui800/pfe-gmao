@@ -328,6 +328,7 @@ section {
     min-height: 100vh;
 }
 
+
 @media (max-width: 991px) {
     .main-content {
         padding-top: 50px;
@@ -1640,7 +1641,7 @@ section {
 
 .navbar-sidebar .navbar__list li a {
     display: block;
-    color: #555;
+    color: #f7f6f6;
     font-size: 16px;
     padding: 15px 0;
 }
@@ -5019,7 +5020,7 @@ section {
 }
 
 .statistic__item .desc {
-    font-size: 18px;
+    font-size: 15px;
     text-transform: uppercase;
     font-weight: 300;
     color: rgba(128, 128, 128, 0.6);
@@ -5037,33 +5038,33 @@ section {
     margin-left: 150px;
 }
 
-.statistic__item--green {
+.statistic__item--color {
     height:380px;
-    background: #00b26f;
+    background: #3e372f;
 }
 
-.statistic__item--orange {
+.statistic__item--color {
     height:380px;
-    background: #ff8300;
+    background: #3e372f;
 }
 
-.statistic__item--blue {
+.statistic__item--color {
     height:380px;
-    background: #00b5e9;
+    background: #3e372f;
 }
-.statistic__item--violet {
+.statistic__item--color {
     height:380px;
-    background: #f442fa;
+    background: #3e372f;
 }
 
 
-.statistic__item--red {
+.statistic__item--color{
     height:380px;
-    background: #fa4251;
+    background: #3e372f;
 }
-.statistic__item--blue2 { 
+.statistic__item--color { 
     height:380px;
-    background: #070580;
+    background: #3e372f;
 }
 
 /* ----- Statistic 2 ----- */

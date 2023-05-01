@@ -227,7 +227,7 @@
 
 ![1](images/Equip_more_Daily.png)
 
-  * From here you can view the Equipment's Spare Parts, Breakdowns, and Maintenance:
+  * From here you can view the Equipment's Spare Parts, Panne, and Maintenance:
 
 ![1](images/more_info2_equipment.png)
 
@@ -282,7 +282,7 @@ After log in the clinical engineer can view all his work orders in a calendar, t
 
 ![chalender list](images/chalender2.png)
 
-## Breakdowns:
+## Panne:
 Recording all the breakdowns that happened in your system is very important for decision making and statistics. So, in our project the admin can view all the break downs in detail.
 
 ### The admin of the site:

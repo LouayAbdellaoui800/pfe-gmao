@@ -27,8 +27,10 @@ const reportController=require('./routes/report')
 
 
 const app = express();
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}))
-app.use(session({secret:'anysecret',resave:false,saveUninitialized:false}));
+
 const filestorage =multer.diskStorage ({
   destination:(req,file,cb) => {
     cb(null,'public/images');
@@ -48,7 +50,7 @@ if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimety
 
 app.use(multer({storage:filestorage,fileFilter:filefilter}).single('image'));
 
-
+app.use(session({secret:'anysecret',resave:false,saveUninitialized:false}));
 app.use(express.static(DirName+'/public/'));
 app.engine('handlebars', exphbs({layoutsDir:'views/layouts/',defaultLayout:'main-layout',partialsDir:'views/includes/'}));
 app.set('view engine', 'handlebars');
@@ -89,8 +91,8 @@ dialy_inspection.belongsTo(equipment);
 equipment.hasMany(dialy_inspection);
 dialy_inspection.belongsTo(technicien_gct);
 technicien_gct.hasMany(dialy_inspection)
-ppm.belongsTo(equipment);
-equipment.hasMany(ppm);
+ppm.belongsTo(equipment,{foreignKey:'EquipmentCode'});
+equipment.hasMany(ppm,{foreignKey:'EquipmentCode'});
 ppm.belongsTo(technicien_gct);
 technicien_gct.hasMany(ppm)
 maintenance.belongsTo(technicien_gct)
@@ -99,11 +101,11 @@ spare_parts.belongsTo(equipment)
 equipment.hasMany(spare_parts)
 
 // synchronizing with database 
-sequelize.sync()
-//sequelize.sync({force:true})
+sequelize.sync({force:false})
+//sequelize.sync({force:false})
 .then(res => {
     app.listen(5000,() => {
-        console.log('Running')
+        console.log('YES')
        })
       
     })

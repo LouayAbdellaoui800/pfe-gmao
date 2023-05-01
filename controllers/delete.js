@@ -59,6 +59,15 @@ exports.deleteAgentSupplier=(req,res)=>{
  })
     .catch(err => console.log("ERROR!!!!!!",err) )
  }
+ exports.deletepanneChef=(req,res)=>{
+   code=req.params.id
+   BreakDown.findByPk(code).then(breakdown=>{ 
+   console.log(code)
+    breakdown.destroy().then(res.redirect('/chefservice/panne'))
+    
+})
+   .catch(err => console.log("ERROR!!!!!!",err) )
+}
 
  exports.deleteWorkOrder=(req,res)=>{
     code=req.params.id
