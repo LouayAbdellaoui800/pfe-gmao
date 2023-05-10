@@ -59,19 +59,19 @@
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">      
                 <li class="{{#if DI }}active{{/if}} has-sub">
-                    <a href="/ChefService/dialyInspection">
-                        <i class="fas fa-copy"></i>Dialy Inspection</a>
+                    <a href="/technicien/dialyInspection">
+                        <i class="fas fa-copy"></i>Inspection Quotidienne</a>
                 </li>                        
                 <li class="{{#if PPM }}active{{/if}} has-sub">
-                    <a class="js-arrow" href="/chefservice/ppm">
-                        <i class="fas fa-copy"></i>PPM</a>
+                    <a class="js-arrow" href="/technicien/ppm">
+                        <i class="fas fa-copy"></i>Maintenance Préventive Planifié</a>
                 </li> 
                 <li class="{{#if WO }}active{{/if}} has-sub">
-                    <a class="js-arrow" href="/ChefService/workOrder">
-                        <i class="fas fa-copy"></i>work Orders</a>
+                    <a class="js-arrow" href="/technicien/workOrder">
+                        <i class="fas fa-copy"></i>Bon de Travail</a>
                 </li> 
                  <li class="{{#if PN }}active{{/if}} has-sub">
-                    <a class="js-arrow" href="/ChefService/panne">
+                    <a class="js-arrow" href="/technicien/panne">
                         <i class="fas fa-copy"></i>Panne</a>
                 </li> 
     
@@ -114,7 +114,7 @@
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">
-                                            <img src="images/{{Chef.Image}}" alt="John Doe" />
+                                            <img src="images/{{Tech.Image}}" alt="John Doe" />
                                         </div>
                                         <div class="content">
                                             <a class="js-acc-btn" href="#">GMAO</a>
@@ -123,12 +123,12 @@
                                             <div class="info clearfix">
                                                 <div class="image">
                                                     <a href="#">
-                                                        <img src="images/{{Chef.Image}}" alt="John Doe" />
+                                                        <img src="images/{{Tech.Image}}" alt="John Doe" />
                                                     </a>
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">{{Chef.FName}} {{Chef.LName}}</a>
+                                                        <a href="#">{{Tech.FName}} {{Tech.LName}}</a>
                                                     </h5>
                                                     <span class="email">Technicien</span>
                                                 </div>

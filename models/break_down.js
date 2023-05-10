@@ -2,7 +2,7 @@ const Sequelize=require('sequelize');
 const sequelize=require('../util/db.js');
 
 
-const Break_down=sequelize.define('BreakDown',{
+const Break_down=sequelize.define('Panne',{
 Code:{
     type:Sequelize.INTEGER,
     allowNull:false,

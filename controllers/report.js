@@ -1,6 +1,6 @@
 Equipment=require('../models/equipment')
 AgentSupplier=require('../models/agent_supplier')
-Technicien=require('../models/chef_Service')
+Technicien=require('../models/technicien');
 Department=require('../models/department')
 SparePart=require('../models/spare_part')
 DialyInspection=require('../models/dialy_inspection')

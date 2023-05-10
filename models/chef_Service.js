@@ -2,7 +2,7 @@ const Sequelize=require('sequelize');
 const sequelize=require('../util/db.js');
 
 
-const Technicien_gct=sequelize.define('Technicien',{
+const Chef_gct=sequelize.define('ChefService',{
     ID: {
         type:Sequelize.BIGINT(20),
        allowNull:false,
@@ -17,7 +17,7 @@ const Technicien_gct=sequelize.define('Technicien',{
         allowNull:false
     },
     Phone:{
-        type:Sequelize.BIGINT(20),
+        type:Sequelize.STRING,
         allowNull:false,
     },
     Image:{
@@ -46,4 +46,4 @@ const Technicien_gct=sequelize.define('Technicien',{
     }
 });
 
-module.exports=Technicien_gct;
+module.exports=Chef_gct;

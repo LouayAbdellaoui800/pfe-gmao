@@ -2,7 +2,7 @@ const Sequelize=require('sequelize');
 const sequelize=require('../util/db.js');
 
 
-const Spare_part=sequelize.define('SparePart',{
+const Spare_part=sequelize.define('PieceDerechange',{
 Code:{
     type:Sequelize.INTEGER,
     allowNull:false,

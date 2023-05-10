@@ -5,7 +5,7 @@ const deleteController=require('../controllers/delete')
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 
-function checkUserRole(req, res, next) {
+/* function checkUserRole(req, res, next) {
   if (req.user.role === 'user') {
     return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
   } else {
@@ -26,16 +26,16 @@ const authMiddleware = (req, res, next) => {
     console.log(err);
     res.redirect('/login');
   }
-};
+}; */
 
-router.get('/agentSupplier/delete/:id',authMiddleware,checkUserRole,deleteController.deleteAgentSupplier);
-router.get('/chefservice/delete/:id',authMiddleware,checkUserRole,deleteController.deleteTechnicien);
-router.get('/equipment/delete/:id',authMiddleware,checkUserRole,deleteController.deleteEquipment);
-router.get('/sparePart/delete/:id',authMiddleware,checkUserRole,deleteController.deleteSparePart);
-router.get('/breakDown/delete/:id',authMiddleware,checkUserRole,deleteController.deleteBreakDown);
-router.get('/chefservice/panne/delete/:id',deleteController.deletepanneChef);
-router.get('/workOrder/delete/:id',authMiddleware,checkUserRole,deleteController.deleteWorkOrder);
-router.get('/maintenance/delete/:id',authMiddleware,checkUserRole,deleteController.deleteMaintenance);
+router.get('/agentSupplier/delete/:id',deleteController.deleteAgentSupplier);
+router.get('/technicien/delete/:id',deleteController.deleteTechnicien);
+router.get('/equipment/delete/:id',deleteController.deleteEquipment);
+router.get('/sparePart/delete/:id',deleteController.deleteSparePart);
+router.get('/breakDown/delete/:id',deleteController.deleteBreakDown);
+router.get('/technicien/panne/delete/:id',deleteController.deletepanneChef);
+router.get('/workOrder/delete/:id',deleteController.deleteWorkOrder);
+router.get('/maintenance/delete/:id',deleteController.deleteMaintenance);
 
 
 

@@ -1,6 +1,6 @@
 const Sequelize=require('sequelize');
 
-const sequelize = new Sequelize('GMAO','root','mysql',{
+const sequelize = new Sequelize('GMAO2','root','mysql',{
     host:'localhost',
     dialect:'mysql'
    

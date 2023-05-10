@@ -6,7 +6,10 @@ const multer =require('multer');
 const DirName=require('./util/path');
 const sequelize=require('./util/db')
 const session=require('express-session');
-const technicien_gct=require('./models/chef_Service');
+
+const Magazinier_gct =require('./models/magazinier');
+const Technicien_gct =require('./models/technicien');
+const Chef_gct=require('./models/chef_Service');
 const spare_parts=require('./models/spare_part');
 const department=require('./models/department');
 const agent_supplier=require('./models/agent_supplier');
@@ -52,7 +55,7 @@ app.use(multer({storage:filestorage,fileFilter:filefilter}).single('image'));
 
 app.use(session({secret:'anysecret',resave:false,saveUninitialized:false}));
 app.use(express.static(DirName+'/public/'));
-app.engine('handlebars', exphbs({layoutsDir:'views/layouts/',defaultLayout:'main-layout',partialsDir:'views/includes/'}));
+app.engine('handlebars', exphbs({layoutsDir:'views/layouts/',defaultLayout:'admin-Layout',partialsDir:'views/includes/'}));
 app.set('view engine', 'handlebars');
 app.set('views','views');
 
@@ -71,10 +74,18 @@ app.use((req,res)=>{
 
 ppm_questions.belongsTo(equipment,{foreignKey:'EquipmentCode'})
 equipment.hasOne(ppm_questions,{foreignKey:'EquipmentCode'})
-technicien_gct.belongsTo(department,{foreignKey:'DepartmentCode'})
-department.hasMany(technicien_gct,{foreignKey:'DepartmentCode'});
-work_order.belongsTo(technicien_gct);
-technicien_gct.hasMany(work_order);
+
+Chef_gct.belongsTo(department,{foreignKey:'DepartmentCode'})
+department.hasMany(Chef_gct,{foreignKey:'DepartmentCode'});
+
+Technicien_gct.belongsTo(department,{foreignKey:'DepartmentCode'})
+department.hasMany(Technicien_gct,{foreignKey:'DepartmentCode'});
+
+Magazinier_gct.belongsTo(department,{foreignKey:'DepartmentCode'})
+department.hasMany(Magazinier_gct,{foreignKey:'DepartmentCode'});
+
+work_order.belongsTo(Technicien_gct);
+Technicien_gct.hasMany(work_order);
 spare_parts.belongsTo(agent_supplier);
 agent_supplier.hasMany(spare_parts);
 equipment.belongsTo(agent_supplier);
@@ -89,14 +100,14 @@ maintenance.belongsTo(break_down);
 break_down.hasMany(maintenance);
 dialy_inspection.belongsTo(equipment);
 equipment.hasMany(dialy_inspection);
-dialy_inspection.belongsTo(technicien_gct);
-technicien_gct.hasMany(dialy_inspection)
+dialy_inspection.belongsTo(Technicien_gct);
+Technicien_gct.hasMany(dialy_inspection)
 ppm.belongsTo(equipment,{foreignKey:'EquipmentCode'});
 equipment.hasMany(ppm,{foreignKey:'EquipmentCode'});
-ppm.belongsTo(technicien_gct);
-technicien_gct.hasMany(ppm)
-maintenance.belongsTo(technicien_gct)
-technicien_gct.hasMany(maintenance)
+ppm.belongsTo(Technicien_gct);
+Technicien_gct.hasMany(ppm)
+maintenance.belongsTo(Technicien_gct)
+Technicien_gct.hasMany(maintenance)
 spare_parts.belongsTo(equipment)
 equipment.hasMany(spare_parts)
 

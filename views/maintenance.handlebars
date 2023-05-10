@@ -24,7 +24,7 @@
                                     <th>Panne</th>
                                     <th>Department</th>
                                     <th>Equipment</th>
-                                    <th>Chef Service</th>
+                                    <th>Technicien</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -84,7 +84,7 @@
                 </div>
                 <div class="login-form">
                           <div class="form-group">
-                            <label class=" form-control-label">Chef ID</label>
+                            <label class=" form-control-label">Technicien ID</label>
                             <select name="ID"required id="select" class="form-control">
                                 {{#each chef}}
                                     <option value="{{this.ID}}">{{this.FName}} {{this.LName}} {{this.ID}}</option>
@@ -92,7 +92,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class=" form-control-label">Break Down Code</label>
+                            <label class=" form-control-label">Panne Code</label>
                             <select name="BreakDownID"required id="select" class="form-control">
                                 {{#each breakDowns}}
                                     <option value="{{this.Code}}">{{this.Code}} : {{this.Date}} ({{this.EquipmentName}}-{{this.EquipmentCode}}) {{this.Reason}}</option>

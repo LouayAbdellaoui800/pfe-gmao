@@ -2,7 +2,12 @@ const bcrypt = require('bcryptjs')
 const Department =require('../models/department');
 const AgentSupplier =require('../models/agent_supplier');
 const BreakDown =require('../models/break_down');
-const Technicien=require('../models/chef_Service')
+
+const ChefService=require('../models/chef_Service');
+const Technicien=require('../models/technicien');
+const Magazinier=require('../models/magazinier');
+
+
 const Equipment =require('../models/equipment');
 const Maintenance =require('../models/maintenance');
 const SparePart =require('../models/spare_part');
@@ -21,37 +26,73 @@ exports.homeSignIn=(req,res) => {
 
 exports.signIn = (req, res) => {
     const { email, password } = req.body;
+
+    // Admin login
     if (email === 'admin@gmail.com' && password === '0000') {
         const token = jwt.sign({ email: email, role: 'admin' }, process.env.JWT_SECRET_KEY);
-      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
-      res.redirect('/home');
-     
+        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
+        res.redirect('/home');
     } else {
-      Technicien.findOne({ where: { Email: email } }).then((technicien) => {
-        if (technicien) {
-          bcrypt.compare(password, technicien.Password).then((result) => {
-            if (result) {
-                const token = jwt.sign({ email: email, role: 'user', id: technicien.ID }, process.env.JWT_SECRET_KEY);
-                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
-                req.session.ID = technicien.ID;
-                res.redirect('/ChefService/dialyInspection');
+        // ChefService login
+        ChefService.findOne({ where: { Email: email } }).then((chefser) => {
+            if (chefser) {
+                bcrypt.compare(password, chefser.Password).then((result) => {
+                    if (result) {
+                        const token = jwt.sign({ email: email, role: 'user', id: chefser.ID }, process.env.JWT_SECRET_KEY);
+                        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
+                        req.session.ID = chefser.ID;
+                        res.redirect('/index');
+                    } else {
+                        res.redirect('/');
+                    }
+                });
             } else {
-              res.redirect('/');
+                // Technicien login
+                Technicien.findOne({ where: { Email: email } }).then((technicien) => {
+                    if (technicien) {
+                        bcrypt.compare(password, technicien.Password).then((result) => {
+                            if (result) {
+                                const token = jwt.sign({ email: email, role: 'user', id: technicien.ID }, process.env.JWT_SECRET_KEY);
+                                res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
+                                req.session.ID = technicien.ID;
+                                res.redirect("/technicien/dialyInspection");
+                            } else {
+                                res.redirect('/');
+                            }
+                        });
+                    } else {
+                        // Magazinier login
+                        Magazinier.findOne({ where: { Email: email } }).then((magazinier) => {
+                            if (magazinier) {
+                                bcrypt.compare(password, magazinier.Password).then((result) => {
+                                    if (result) {
+                                        const token = jwt.sign({ email: email, role: 'user', id: magazinier.ID }, process.env.JWT_SECRET_KEY);
+                                        res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
+                                        req.session.ID = magazinier.ID;
+                                        res.redirect("/agentSupplier");
+                                    } else {
+                                        res.redirect('/');
+                                    }
+                                });
+                            } else {
+                                res.redirect('/');
+                            }
+                        });
+                    }
+                });
             }
-          });
-        } else {
-          res.redirect('/');
-        }
-      });
+        });
     }
-  };
+};
 
 exports.home=(req,res) =>{
     res.render('home',{pageTitle:'Home',Home:true});
 }
-exports.dialyInspectionChef=(req,res) =>{
-    
-    ChefID=req.session.ID
+exports.index=(req,res) =>{
+    res.render('index',{layout:'ChefServiceLayout',pageTitle:"Welcome Chef Service"});
+}
+exports.dialyInspectionTech=(req,res) =>{ 
+    TechID=req.session.ID
     Equipment.findAll({include:[{model:Department}]}).then(equipments => {
         const eqs=equipments.map(equipment => {
             return{
@@ -60,19 +101,19 @@ exports.dialyInspectionChef=(req,res) =>{
                 Department:equipment.Department.Name
             }
         })
-        Technicien.findByPk(ChefID).then(chef=> {
-            const Chef ={
-                Image:chef.Image,
-                FName:chef.FName,
-                LName:chef.LName
+        Technicien.findByPk(TechID).then(tech=> {
+            const Tech ={
+                Image:tech.Image,
+                FName:tech.FName,
+                LName:tech.LName
             }
-        res.render('dialyInspectionForm',{layout:'ChefserviceLayout',pageTitle:'Dialy Inspection',
-        DI:true,equipments:eqs,Chef:Chef})
+        res.render('dialyInspectionForm',{layout:'TechnicienLayout',pageTitle:'Dialy Inspection',
+        DI:true,equipments:eqs,Tech:Tech})
         })
     })
 }
 
-exports.dialyInspectionChefPost=(req,res) =>{
+exports.dialyInspectionTechPost=(req,res) =>{
  code = req.body.Code
  date = req.body.DATE
  q1 = req.body.Q1
@@ -84,7 +125,7 @@ exports.dialyInspectionChefPost=(req,res) =>{
  q7 = req.body.Q7
  q8 = req.body.Q8
  equipmentId = req.body.equipement
- ChefID=req.session.ID
+ TechID=req.session.ID
 
 
  q1 = q1 == "on" ? "on": "off"
@@ -102,23 +143,23 @@ exports.dialyInspectionChefPost=(req,res) =>{
  
  Equipment.findByPk(equipmentId).then(equipment => { 
      if(equipment){
-        Technicien.findByPk(ChefID).then(chefService =>{
-             if(chefService){
-                    DailyInspection.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,Q6:q6,Q7:q7,Q8:q8,EquipmentCode:equipmentId,TechnicienID:ChefID})
-                        .then(dailyinspection => res.redirect('/chefservice/dialyInspection') )
+        Technicien.findByPk(TechID).then(technicien =>{
+             if(technicien){
+                    DailyInspection.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,Q6:q6,Q7:q7,Q8:q8,EquipmentCode:equipmentId,TechnicienID:TechID})
+                        .then(dailyinspection => res.redirect('/technicien/dialyInspection') )
             }
             else{
-                res.render('error',{layout:false,pageTitle:'Error',href:'/chefservice/dialyInspection',message:'Sorry !!! Could Not Get this chefservice'})
+                res.render('error',{layout:false,pageTitle:'Error',href:'/technicien/dialyInspection',message:'Sorry !!! Could Not Get this technicien'})
             } 
          })   
      }
      else{
-         res.render('error',{layout:false,pageTitle:'Error',href:'/chefservice/dialyInspection',message:'Sorry !!! Could Not Get this Equipment'})
+         res.render('error',{layout:false,pageTitle:'Error',href:'/technicien/dialyInspection',message:'Sorry !!! Could Not Get this Equipment'})
      }
  }).catch(err => {
      if(err){
          console.log(err)
-      res.render('error',{layout:false,pageTitle:'Error',href:'/chefservice/dialyInspection',message:'Sorry !!! Could Not Add This Report '})
+      res.render('error',{layout:false,pageTitle:'Error',href:'/technicien/dialyInspection',message:'Sorry !!! Could Not Add This Report '})
      }
        
  })
@@ -127,36 +168,36 @@ exports.dialyInspectionChefPost=(req,res) =>{
 
 
 
-exports.ppmChef=(req,res) =>{
-    ChefID=req.session.ID
-    PpmQuestions.findAll({include:[{model:Equipment,include:[{model:Department}]}]}).then(reports=>{
-        const eqs=reports.map(report => {
-            return {
-                Name:report.Equipment.Name,
-                Code:report.Equipment.Code,
-                Department:report.Equipment.Department.Name
+exports.ppmTech=(req,res) =>{
+    TechID=req.session.ID
+    Equipment.findAll({include:[{model:Department}]}).then(equipments => {
+        const eqs=equipments.map(equipment => {
+            return{
+                Name:equipment.Name,
+                Code:equipment.Code,
+                Department:equipment.Department.Name
             }
         })
-        Technicien.findByPk(ChefID).then(chef=> {
-            const Chef ={
-                Image:chef.Image,
-                FName:chef.FName,
-                LName:chef.LName
+        Technicien.findByPk(TechID).then(tech=> {
+            const Tech ={
+                Image:tech.Image,
+                FName:tech.FName,
+                LName:tech.LName
             }
-            res.render('deviceForm',{layout:'ChefserviceLayout',pageTitle:'PPM',
-                PPM:true,equipments:eqs,Chef:Chef})
+            res.render('deviceForm',{layout:'TechnicienLayout',pageTitle:'PPM',
+                PPM:true,equipments:eqs,Tech:Tech})
         })
     })
 
 }
-exports.ppmChefPost=(req,res) =>{
+exports.ppmTechPost=(req,res) =>{
     code=req.body.Code
-    res.redirect('/chefservice/ppm/'+code);
+    res.redirect('/technicien/ppm/'+code);
 }
 
- exports.ppmChefEquipment =(req,res) => { 
+ exports.ppmTechEquipment =(req,res) => { 
     code=req.params.code
-    ChefID=req.session.ID
+    TechID=req.session.ID
     PpmQuestions.findOne({where:{EquipmentCode:code}}).then(ppm => {
         const Ppm={
             Q1:ppm.Q1,
@@ -165,22 +206,22 @@ exports.ppmChefPost=(req,res) =>{
             Q4:ppm.Q4,
             Q5:ppm.Q5
         }
-       Technicien.findByPk(ChefID).then(chef=> {
-           const Chef ={
-               Image:chef.Image,
-               FName:chef.FName,
-               LName:chef.LName
+       Technicien.findByPk(TechID).then(tech=> {
+           const Tech ={
+               Image:tech.Image,
+               FName:tech.FName,
+               LName:tech.LName
            }
-           res.render('ppmForm',{layout:'ChefserviceLayout',pageTitle:'Dialy Inspection',
-           ppm:true,Code:code,Chef:Chef})
+           res.render('ppmForm',{layout:'TechnicienLayout',pageTitle:'Dialy Inspection',
+           PPM:true,ppm:Ppm,Code:code,Tech:Tech})
        })
    })
 }
 
-exports.ppmChefEquipmentPost=(req,res) =>{
+exports.ppmTechEquipmentPost=(req,res) =>{
     date=req.body.DATE
     equipmentId=req.params.Code
-    ChefID=req.session.ID
+    TechID=req.session.ID
     q1 = req.body.Q1
     q2 = req.body.Q2
     q3 = req.body.Q3
@@ -199,23 +240,23 @@ exports.ppmChefEquipmentPost=(req,res) =>{
 
     Equipment.findByPk(equipmentId).then(equipment => { 
         if(equipment){
-            Technicien.findByPk(ChefID).then(chefService =>{
-                if(chefService){
-                       PPM.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,N1:n1,N2:n2,N3:n3,N4:n4,N5:n5,EquipmentCode:equipmentId,TechnicienID:ChefID})
-                           .then(dailyinspection => res.redirect('/chefservice/ppm') )
+            Technicien.findByPk(TechID).then(technicien=>{
+                if(technicien){
+                       PPM.create({DATE:date,Q1:q1,Q2:q2,Q3:q3,Q4:q4,Q5:q5,N1:n1,N2:n2,N3:n3,N4:n4,N5:n5,EquipmentCode:equipmentId,TechnicienID:TechID})
+                           .then(dailyinspection => res.redirect('/technicien/ppm') )
                }
                else{
-                   res.render('error',{layout:false,pageTitle:'Error',href:'/chefservice/ppm',message:'Sorry !!! Could Not Get this Chef'})
+                   res.render('error',{layout:false,pageTitle:'Error',href:'/technicien/ppm',message:'Sorry !!! Could Not Get this Chef'})
                } 
             })   
         }
         else{
-            res.render('error',{layout:false,pageTitle:'Error',href:'/chefservice/ppm',message:'Sorry !!! Could Not Get this Equipment'})
+            res.render('error',{layout:false,pageTitle:'Error',href:'/technicien/ppm',message:'Sorry !!! Could Not Get this Equipment'})
         }
     }).catch(err => {
         if(err){
             console.log(err)
-         res.render('error',{layout:false,pageTitle:'Error',href:'/chefservice/ppm',message:'Sorry !!! Could Not Add This Report '})
+         res.render('error',{layout:false,pageTitle:'Error',href:'/technicien/ppm',message:'Sorry !!! Could Not Add This Report '})
         }
           
     })
@@ -253,7 +294,6 @@ Department.findAll({
 
 
 }
-
 exports.maintenance=(req,res)=>{
     Maintenance.findAll({include:[{model:BreakDown,include:[{model:Equipment,include:[{model:Department}]}]},{model:Technicien}]}).then(maintenances => {
         const m = maintenances.map(main => {
@@ -261,13 +301,13 @@ exports.maintenance=(req,res)=>{
                     Id:main.Id,
                     StartDate:main.StartDate,
                     EndDate:main.EndDate,
-                    BreakDownCode:main.BreakDown.Code,
-                    EquipmentName:main.BreakDown.Equipment.Name,
-                    EquipmentCode:main.BreakDown.Equipment.Code,
-                    EquipmentImage:main.BreakDown.Equipment.Image,
+                    BreakDownCode:main.Panne.Code,
+                    EquipmentName:main.Panne.Equipment.Name,
+                    EquipmentCode:main.Panne.Equipment.Code,
+                    EquipmentImage:main.Panne.Equipment.Image,
                     Technicien:main.Technicien.FName+' '+main.Technicien.LName,
                     TechnicienImage:main.Technicien.Image,
-                    Department:main.BreakDown.Equipment.Department.Name,
+                    Department:main.Panne.Equipment.Department.Name,
                     Description:main.Description             
                   }
                     
@@ -292,7 +332,7 @@ exports.maintenance=(req,res)=>{
                 ID:ChefService.ID
             }
         })
-        res.render('maintenance',{pageTitle:'Maintenance',
+        res.render('maintenance',{layout:"ChefServiceLayout",pageTitle:'Maintenance',
                                     Maintenance:true,Maintenances:m,
                                     hasMaintenance:m.length>0,chef:en,breakDowns:bd});
     })    
@@ -307,7 +347,8 @@ exports.maintenance=(req,res)=>{
 
 
 }
-exports.panneChef=(req,res)=>{
+
+exports.panneTech=(req,res)=>{
     BreakDown.findAll({include:[{model:Equipment,include:[{model:Department}]}]}).then(breakdowns => {
         const bd = breakdowns.map(breakD => {
                   return {
@@ -329,9 +370,10 @@ exports.panneChef=(req,res)=>{
                 }
             })
 
-        res.render('Panne',{layout:"ChefserviceLayout",pageTitle:'Panne',BreakDown:true,PN:bd,
+        res.render('Panne',{layout:"TechnicienLayout",pageTitle:'Panne',BreakDown:true,PN:bd,
                                     hasBreakDown:bd.length>0,Equipments:eqs});
         })
+        
         
         
 
@@ -340,8 +382,11 @@ exports.panneChef=(req,res)=>{
         res.render('error',{layout:false,pageTitle:'Error',href:'/home',message:'Sorry !!! Could Not Get BreakDowns'})
     })
 }
+
+
 exports.chefService=(req,res)=>{
-    Technicien.findAll({
+    ChefID = req.session.ID
+    ChefService.findAll({
         include:[{model:Department}]
         }).then(ChefdeService=>{
         const chefservices=ChefdeService.map(chefservice => {     
@@ -359,8 +404,41 @@ exports.chefService=(req,res)=>{
             }
 
         })
-        res.render('chefService',{pageTitle:'chefService',CE:true,
+        
+        
+        res.render('chefService',{pageTitle:'chefService',CS:true,
         ChefdeService:chefservices,hasChef:chefservices.length>0});
+    })
+    
+    .catch(err => {
+        if(err)
+         res.render('error',{layout:false,pageTitle:'Error',href:'/home',message:'Sorry !!! Could Not Get Chef Services'})
+    })
+
+}
+exports.technicien=(req,res)=>{
+    
+    Technicien.findAll({
+        include:[{model:Department}]
+        }).then(tech=>{
+        const techniciens=tech.map(technicien => {     
+            return{
+                ID:technicien.ID,
+                FName:technicien.FName,
+                LName:technicien.LName,
+                Image:technicien.Image,
+                Adress:technicien.Adress,
+                Phone:technicien.Phone,
+                Email:technicien.Email,
+                Age:technicien.Age,
+                WorkHours:technicien.WorkHours,
+                DepartmentCode:technicien.Department.Name
+            }
+
+        })
+       
+        res.render('technicien',{layout:'ChefServiceLayout',pageTitle:'Technicien',TE:true,
+        tech:techniciens,hasTech:techniciens.length>0});
     })
     .catch(err => {
         if(err)
@@ -368,6 +446,36 @@ exports.chefService=(req,res)=>{
     })
     
 }
+exports.magazinier=(req,res)=>{
+    Magazinier.findAll({
+        include:[{model:Department}]
+        }).then(mag=>{
+        const magaziniers=mag.map(magazinier => {     
+            return{
+                ID:magazinier.ID,
+                FName:magazinier.FName,
+                LName:magazinier.LName,
+                Image:magazinier.Image,
+                Adress:magazinier.Adress,
+                Phone:magazinier.Phone,
+                Email:magazinier.Email,
+                Age:magazinier.Age,
+                WorkHours:magazinier.WorkHours,
+                DepartmentCode:magazinier.Department.Name
+            }
+
+        })
+        res.render('magazinier',{pageTitle:'Magazinier',MG:true,
+        mag:magaziniers,hasMag:magaziniers.length>0});
+    })
+    .catch(err => {
+        if(err)
+         res.render('error',{layout:false,pageTitle:'Error',href:'/home',message:'Sorry !!! Could Not Get Magaziniers'})
+    })
+    
+}
+
+
 exports.sparePart=(req,res)=>{
     SparePart.findAll({include:[{model:AgentSupplier},{model:Equipment}]}).then(sparepart => {
         const sp = sparepart.map(sparepart => {
@@ -399,7 +507,7 @@ exports.sparePart=(req,res)=>{
                     Id:agent.Id
                 }
             })
-        res.render('sparePart2',{pageTitle:'SpareParts',SP:true,SpareParts:sp,
+        res.render('sparePart2',{layout:"MagazinierLayout",pageTitle:'SpareParts',SP:true,SpareParts:sp,
                                 hasPart:sp.length>0,Equipments:eq,Agents:ag});
         })    
         })             
@@ -424,7 +532,7 @@ exports.agentSupplier=(req,res)=>{
                   }
                 })
 
-    res.render('agentSupplier',{pageTitle:'AgentSupplier',
+    res.render('agentSupplier',{layout:"MagazinierLayout",pageTitle:'AgentSupplier',
                                 AS:true,agentSuppliers:as,
                                 hasAgentSupplier:as.length>0});
     }).catch(err => {
@@ -470,7 +578,7 @@ exports.workOrder=(req,res)=>{
                     DepartmentName:equipment.Department.Name
                 }
             }) 
-            res.render('workOrder',{pageTitle:'WorkOrder',
+            res.render('workOrder',{layout:"ChefServiceLayout",pageTitle:'WorkOrder',
                                         WorkOrder:true,Workorders:wd,
                                         hasWorkOrder:wd.length>0,WO:true,Techniciens:en,Equipments:eq});
         })    
@@ -505,7 +613,7 @@ exports.breakDown=(req,res)=>{
                     Department:equipment.Department.Name
                 }
             })
-        res.render('breakDown',{pageTitle:'BreakDown',BreakDown:true,breakDowns:bd,
+        res.render('breakDown',{layout:"ChefServiceLayout",pageTitle:'BreakDown',BreakDown:true,breakDowns:bd,
                                     hasBreakDown:bd.length>0,Equipments:eqs});
         })
 
@@ -514,7 +622,6 @@ exports.breakDown=(req,res)=>{
         res.render('error',{layout:false,pageTitle:'Error',href:'/home',message:'Sorry !!! Could Not Get BreakDowns'})
     })
 }
-
 exports.equipment=(req,res)=>{
     Equipment.findAll({
         include:[{model:Department},{model:AgentSupplier}]
@@ -546,7 +653,7 @@ exports.equipment=(req,res)=>{
                         Id:agent.Id
                     }
                 })        
-        res.render('equipment',{pageTitle:'Equipment',Equipment:true,
+        res.render('equipements',{layout:"MagazinierLayout",pageTitle:'Equipment',Equipment:true,
                                 equipments:eq,hasEquipments:eq.length>0,Agents:ag});
             })               
     }).catch( err => {
@@ -557,8 +664,49 @@ exports.equipment=(req,res)=>{
 
    
 }
+exports.chefequipment=(req,res)=>{
+    Equipment.findAll({
+        include:[{model:Department},{model:AgentSupplier}]
+        }).then(equipments => {
+        const eq = equipments.map(equipment => {
+                  return {
+                    Code: equipment.Code,
+                    Name: equipment.Name,
+                    Cost: equipment.Cost,
+                    PM:equipment.PM,
+                    Image:equipment.Image,
+                    InstallationDate: equipment.InstallationDate,
+                    ArrivalDate:equipment.ArrivalDate,
+                    WarrantyDate:equipment.WarrantyDate,
+                    Model:equipment.Model,
+                    SerialNumber:equipment.SerialNumber,
+                    Manufacturer:equipment.Manufacturer,
+                    Location:equipment.Location,
+                    Notes:equipment.Notes,
+                    DepartmentCode:equipment.Department.dataValues.Name,
+                    AgentSupplierId:equipment.AgentSupplier.dataValues.Name
+                  }
+                })
+
+            AgentSupplier.findAll().then(agents => {
+                const ag = agents.map(agent => {
+                    return {
+                        Name:agent.Name,
+                        Id:agent.Id
+                    }
+                })        
+        res.render('equipment',{layout:"ChefServiceLayout",pageTitle:'Equipment',Equipment:true,
+                                equipments:eq,hasEquipments:eq.length>0,Agents:ag});
+            })               
+    }).catch( err => {
+        if(err)
+         res.render('error',{layout:false,pageTitle:'Error',href:'/home',message:'Sorry !!! Could Not Get Equipments'})
+        })
 
 
+   
+}
+//reports
 exports.installation=(req,res)=>{
     Equipment.findAll({
         include:[{model:Department},{model:AgentSupplier}]
@@ -582,7 +730,7 @@ exports.installation=(req,res)=>{
                     AgentSupplierId:equipment.AgentSupplier.dataValues.Name
                   }
                 })
-        res.render('installationTable',{pageTitle:'Installation',Reports:true,
+        res.render('installationTable',{layout:"ChefServiceLayout",pageTitle:'Installation',Reports:true,
                                 reports:eq,hasReports:eq.length>0});
     }).catch( err => {
         if(err)
@@ -596,7 +744,7 @@ PPM.findAll({include:[{model:Equipment,include:[{model:PpmQuestions}]},{model:Te
         return {
         Code:report.Code,
         DATE:report.DATE,
-        Chef:report.Technicien.FName+' '+report.Technicien.LName,
+        Tech:report.Technicien.FName+' '+report.Technicien.LName,
         EquipmentName:report.Equipment.Name,
         EquipmentCode:report.Equipment.Code,
         EquipmentModel:report.Equipment.Model,
@@ -613,7 +761,7 @@ PPM.findAll({include:[{model:Equipment,include:[{model:PpmQuestions}]},{model:Te
         N5:report.N5
         }
     })
-    res.render('ppmReportTable',{pageTitle:'PPM',
+    res.render('ppmReportTable',{layout:"ChefServiceLayout",pageTitle:'PPM',
         Reports:true,reports:reps,hasReports:reps.length>0,rep:true })   
     
 }).catch(err => {
@@ -629,14 +777,14 @@ exports.dailyInspection=(req,res)=>{
         return{
             Code:report.Code,
             DATE:report.DATE,
-            Chef:report.Technicien.FName +' '+ report.Technicien.LName ,
+            Tech:report.Technicien.FName +' '+ report.Technicien.LName ,
             Equipment:report.Equipment.Name,
             eq:true,
             EquipmentModel:report.Equipment.Model
         }
 
  })
- res.render('dialyinspectionTable',{pageTitle:'Daily Inspection',
+ res.render('dialyinspectionTable',{layout:"ChefServiceLayout",pageTitle:'Daily Inspection',
     Reports:true,eq:true,reports:reps,hasReports:reps.length>0 })  
 }).catch(err => {
     res.render('error',{layout:false,pageTitle:'Error',href:'/',message:'Sorry !!! Could Not Get Report'})
@@ -644,7 +792,7 @@ exports.dailyInspection=(req,res)=>{
 })
 
 }
-
+// end reports
 
 exports.workorder=(req,res) =>{
 id=req.session.ID
@@ -655,19 +803,19 @@ WorkOrder.findAll({where:{TechnicienID:id}}).then(orders => {
             color:order.Priority == 'Low' ? 'green' :order.Priority == 'High' ? 'red': 'blue' ,
             start:(order.StartDate.split('-')[0]+'-'+order.StartDate.split('-')[1]+'-'+order.StartDate.split('-')[2])+' '+'00:00:00Z',
             end:(order.EndDate.split('-')[0]+'-'+order.EndDate.split('-')[1]+'-'+order.EndDate.split('-')[2])+' '+'23:00:00Z',
-            url:'/chefservice/workOrder/description/'+order.Code
+            url:'/technicien/workOrder/description/'+order.Code
         }
 
     })
 
-    Technicien.findByPk(ChefID).then(chef => {
-        const Chef ={
-            Image:chef.Image,
-            FName:chef.FName,
-            LName:chef.LName
+    Technicien.findByPk(TechID).then(tech => {
+        const Tech ={
+            Image:tech.Image,
+            FName:tech.FName,
+            LName:tech.LName
         }
         
-    res.render('calender',{layout:false,WO:true,events:events,pageTitle:'calender',Chef:Chef})
+    res.render('calender',{layout:false,WO:true,events:events,pageTitle:'calender',Tech:Tech})
     })
 
 }).catch(err => {
@@ -679,7 +827,7 @@ WorkOrder.findAll({where:{TechnicienID:id}}).then(orders => {
 
 exports.workorderDescription=(req,res)=>{
     code=req.params.code
-    ChefID=req.session.ID
+    TechID=req.session.ID
     WorkOrder.findOne({where:{Code:code},include:[{model:Equipment}]}).then(order => {
         var order={
             Code:order.Code,
@@ -693,14 +841,14 @@ exports.workorderDescription=(req,res)=>{
             Description:order.Description
 
         }
-        Technicien.findByPk(ChefID).then(chef => {
-            const Chef ={
-                Image:chef.Image,
-                FName:chef.FName,
-                LName:chef.LName
+        Technicien.findByPk(TechID).then(tech => {
+            const Tech ={
+                Image:tech.Image,
+                FName:tech.FName,
+                LName:tech.LName
             }
-        res.render('workOrderDetails',{layout:'ChefserviceLayout',pageTitle:'Work Order',
-                WO:true,order:order,Chef,Chef})
+        res.render('workOrderDetails',{layout:'TechnicienLayout',pageTitle:'Work Order',
+                WO:true,order:order,Tech,Tech})
         })    
     }).catch(err => {
         res.render('error',{layout:false,pageTitle:'Error',href:'/',message:'Sorry !!! Could Not Get Work Orders'})

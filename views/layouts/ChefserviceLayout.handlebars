@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<!-- MAin Layout-->
 <head>
     <!-- Required meta tags-->
     <meta charset="UTF-8">
@@ -32,40 +32,75 @@
     <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
-    <link href="css/theme.css" rel="stylesheet" media="all">
+   <link href="css/theme.css" rel="stylesheet" media="all">
 
 </head>
 
-<body class="animsition" >
+<body class="animsition">
     <div class="page-wrapper">
         
         <!-- MENU SIDEBAR-->
         <aside class="menu-sidebar d-none d-lg-block bg-dark" >
             <div class="logo">
-           
+             
                     <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>
             </div>
             <div class="menu-sidebar__content js-scrollbar1">
                 <nav class="navbar-sidebar">
-                    <ul class="list-unstyled navbar__list">      
-                <li class="{{#if DI }}active{{/if}} has-sub">
-                    <a href="/ChefService/dialyInspection">
-                        <i class="fas fa-copy"></i>Daily Inspection</a>
-                </li>                        
-                <li class="{{#if PPM }}active{{/if}} has-sub">
-                    <a class="js-arrow" href="/ChefService/ppm">
-                        <i class="fas fa-copy"></i>PPM</a>
-                </li> 
+                    <ul class="list-unstyled navbar__list">
+                <li class="{{#if Home }}active{{/if}} has-sub">    
+                    <a class="js-arrow" href="/index">
+                       <i class="fas fa-tachometer-alt"></i>Home</a>
+                </li>
+                <li class="{{#if TE }}active{{/if}} has-sub">
+                    <a class="js-arrow" href="/technicien">
+                        <i class="fas fa-copy"></i>Technicien</a>
+                </li>
+               {{!--  <li class="{{#if SP }}active{{/if}} has-sub">
+                    <a class="js-arrow" href="/sparepart">
+                        <i class="fas fa-copy"></i>Piece de rechange </a>
+                </li>
+                <li class="{{#if AS }}active{{/if}} has-sub">
+                    <a href="/agentSupplier">
+                        <i class="fas fa-table"></i>Fournisseurs</a>
+                </li> --}}
                 <li class="{{#if WO }}active{{/if}} has-sub">
-                    <a class="js-arrow" href="/ChefService/workOrder">
-                        <i class="fas fa-copy"></i>work Orders</a>
-                </li> 
-
-                  <li class="{{#if PN }}active{{/if}} has-sub">
-                    <a href="/ChefService/panne">
-                        <i class="fas fa-copy"></i>Panne</a>
-                </li> 
-    
+                    <a href="/workOrder">
+                        <i class="fas fa-table"></i>Bon de Travail</a>
+                </li>
+                <li class="{{#if Equipment }}active{{/if}} has-sub">
+                    <a href="/equipment">
+                        <i class="fas fa-copy"></i>Equipment</a>
+                </li>
+                {{!-- <li class="{{#if Department }}active{{/if}} has-sub">
+                    <a href="/department">
+                        <i class="fas fa-table"></i>Departments</a>
+                </li> --}}
+                <li class="{{#if Maintenance }}active{{/if}} has-sub">
+                    <a href="/maintenance">
+                        <i class="fas fa-table"></i>Maintenance</a>
+                </li>
+                <li class="{{#if BreakDown }}active{{/if}} has-sub">
+                    <a href="/breakdown">
+                        <i class="fas fa-table"></i>Pannes</a>
+                </li>
+                <li class="{{#if Reports }}active{{/if}}  has-sub">
+                    <a class="js-arrow" href="#" >
+                    <i class="fas fa-copy"></i>Reports</a>
+                        <ul class="navbar-mobile-sub__list list-unstyled js-sub-list bg-dark">
+                            <li>
+                                <a href="/installation">Installation </a>
+                            </li>
+                            <li>
+                                <a href="/ppm">Maintenance Préventive Planifié</a>
+                            </li>
+                            <li>
+                                <a href="/dialyInspection">Inspection Quotidienne</a>
+                            </li>
+                        </ul>
+                    </li>
+     
+                        
                     </ul>
                 </nav>
             </div>
@@ -73,7 +108,7 @@
         <!-- END MENU SIDEBAR-->.
 
         <!-- PAGE CONTAINER-->
-        <div class="page-container" style="height: 100%;">
+        <div class="page-container">
             <!-- HEADER DESKTOP-->
             {{!-- <header class="header-desktop">
                         <div class="section__content section__content--p30">
@@ -105,7 +140,7 @@
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">
-                                            <img src="images/{{Chef.Image}}" alt="John Doe" />
+                                            <img src="images/icon/avatar-01.jpg" alt="John Doe" />
                                         </div>
                                         <div class="content">
                                             <a class="js-acc-btn" href="#">GMAO</a>
@@ -113,15 +148,15 @@
                                         <div class="account-dropdown js-dropdown">
                                             <div class="info clearfix">
                                                 <div class="image">
-                                                    <a href="/">
-                                                        <img src="images/{{Chef.Image}}" alt="John Doe" />
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-01.jpg" alt="John Doe" />
                                                     </a>
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">{{Chef.FName}} {{Chef.LName}}</a>
+                                                        <a href="#">GMAO</a>
                                                     </h5>
-                                                    <span class="email">Technicien</span>
+                                                    <span class="email">Chef Service</span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__body">

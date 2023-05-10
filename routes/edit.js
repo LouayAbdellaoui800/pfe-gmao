@@ -28,14 +28,18 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-router.get('/agentSupplier/edit/:id',authMiddleware,checkUserRole,editController.editAgentSupplier);
-router.get('/chefservice/edit/:id',authMiddleware,checkUserRole,editController.editChefService);
-router.get('/equipment/edit/:id',authMiddleware,checkUserRole,editController.editEquipment);
-router.get('/sparePart/edit/:id',authMiddleware,checkUserRole,editController.editSparePart);
-router.get('/breakDown/edit/:id',authMiddleware,checkUserRole,editController.editBreakDown);
-router.get('/chefservice/panne/edit/:id',authMiddleware,checkUserRole,editController.editPanneChef);
-router.get('/workOrder/edit/:id',authMiddleware,checkUserRole,editController.editWorkOrder);
-router.get('/maintenance/edit/:id',authMiddleware,checkUserRole,editController.editMaintenance);
+router.get('/agentSupplier/edit/:id',/* authMiddleware,checkUserRole, */editController.editAgentSupplier);
+
+router.get('/chefservice/edit/:id',/* authMiddleware,checkUserRole, */editController.editChefService);
+router.get('/technicien/edit/:id',/* authMiddleware,checkUserRole, */editController.editTechnicien);
+router.get('/magazinier/edit/:id',/* authMiddleware,checkUserRole, */editController.editMagazinier);
+
+router.get('/equipment/edit/:id',/* authMiddleware,checkUserRole, */editController.editEquipment);
+router.get('/sparePart/edit/:id',/* authMiddleware,checkUserRole, */editController.editSparePart);
+router.get('/breakDown/edit/:id',/* authMiddleware,checkUserRole, */editController.editBreakDown);
+router.get('/technicien/panne/edit/:id',/* authMiddleware,checkUserRole, */editController.editPanneTech);
+router.get('/workOrder/edit/:id',/* authMiddleware,checkUserRole, */editController.editWorkOrder);
+router.get('/maintenance/edit/:id',/* authMiddleware,checkUserRole, */editController.editMaintenance);
 
 
 

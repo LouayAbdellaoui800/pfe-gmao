@@ -40,16 +40,16 @@
     <div class="page-wrapper">
         
         <!-- MENU SIDEBAR-->
-        <aside class="menu-sidebar d-none d-lg-block">
+        <aside class="menu-sidebar d-none d-lg-block bg-dark">
             <div class="logo">
             
                     <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>
             </div>
-            <div class="menu-sidebar__content js-scrollbar1">
+            <div class="menu-sidebar__content js-scrollbar1 bg-dark">
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                <li class="has-sub">
-                    <a href="/equipment">
+                    <a href="/equipments">
                 <i class="fas fa-copy"></i>Equipment</a>
                 </li>            
                 <li class="{{#if ID }}active{{/if}} has-sub">
@@ -58,15 +58,15 @@
                 </li>                        
                 <li class="{{#if PPM }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/ppm/{{ code }}">
-                        <i class="fas fa-copy"></i>PPM</a>
+                        <i class="fas fa-copy"></i>Maintenance Préventive Planifié</a>
                 </li> 
                 <li class="{{#if DI }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/dailyInspection/{{ code }}">
-                        <i class="fas fa-copy"></i>Daily Inspection</a>
+                        <i class="fas fa-copy"></i>Inspection Quotidienne</a>
                 </li>    
                    <li class="{{#if SP }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/spareParts/{{ code }}">
-                        <i class="fas fa-copy"></i>Spare Parts</a>
+                        <i class="fas fa-copy"></i>Piéce de Rechange</a>
                 </li>    
                   <li class="{{#if BD }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/breakDowns/{{ code }}">

@@ -34,7 +34,7 @@ exports.deleteAgentSupplier=(req,res)=>{
  exports.deleteEquipment=(req,res)=>{
     code=req.params.id
     Equipment.findByPk(code).then(equipment =>{ 
-     equipment.destroy().then(res.redirect('/equipment'))
+     equipment.destroy().then(res.redirect('/equipments'))
      
  })
     .catch(err => console.log("ERROR!!!!!!",err) )
