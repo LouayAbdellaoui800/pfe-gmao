@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="card-body card-block">
+    <div class="login-content">
+      <div class="login-logo">
+
+        <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>
+      </div>
+      <h3 class="title-3 m-b-30">
+        <i class="zmdi zmdi-account-calendar"></i>Envoyer un probleme
+      </h3>
+      <form action="/technicien/diagnostics" method="POST">
+        <div class="login-form">
+          <div class="row form-group">
+            <div class="col col-md-3">
+              <label for="text-input" class=" form-control-label">Date:</label>
+            </div>
+            <div class="col col-sm-3">
+              <input type="date" required name="DATE" placeholder="Enter Date" class="form-control">
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col col-md-3">
+              <label for="text-input" class=" form-control-label">equipement:</label>
+            </div>
+            <div class="col col-sm-3">
+              <select name="equipement" required id="select" class="form-control">
+                {{#each equipments}}
+                <option value="{{this.Code}}">{{this.Name}} {{this.Code}} {{this.Department}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="validationTextarea" class="form-label">Write a problem</label>
+            <textarea class="form-control is-invalid" name="validationTextarea" placeholder="Required example textarea"
+              required></textarea>
+            <div class="invalid-feedback">
+              Please enter a message in the textarea.
+            </div>
+          </div>
+          <div>
+            <button class="au-btn au-btn-load " style="margin-left: 0;">Save</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>

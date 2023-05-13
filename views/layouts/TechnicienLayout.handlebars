@@ -65,6 +65,11 @@
                     <a class="js-arrow" href="/technicien/panne">
                         <i class="fas fa-copy"></i>Panne</a>
                 </li> 
+
+                 <li class="{{#if DA }}active{{/if}} has-sub">
+                    <a class="js-arrow" href="/technicien/diagnostics">
+                        <i class="fas fa-copy"></i>Diagnostic</a>
+                </li>
     
                     </ul>
                 </nav>
@@ -129,7 +134,10 @@
                                                     <a href="/">
                                                         <i class="zmdi zmdi-power"></i>Logout</a>
                                                 </div>
-                                                
+                                                <div class="account-dropdown__item">
+                                                    <a target="_blank" href="http://localhost:4000/send1.html">
+                                                        <i class="zmdi zmdi-email"></i>Inbox</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -6,7 +6,6 @@ const multer =require('multer');
 const DirName=require('./util/path');
 const sequelize=require('./util/db')
 const session=require('express-session');
-
 const Magazinier_gct =require('./models/magazinier');
 const Technicien_gct =require('./models/technicien');
 const Chef_gct=require('./models/chef_Service');
@@ -19,6 +18,7 @@ const break_down=require('./models/break_down');
 const dialy_inspection=require('./models/dialy_inspection');
 const ppm_questions=require('./models/ppm_questions')
 const ppm=require('./models/ppm')
+const PB=require('./models/problems');
 const maintenance=require('./models/maintenance');
 const homeController=require('./routes/main');
 const addController=require('./routes/add');
@@ -33,7 +33,33 @@ const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}))
+const PORT = process.env.PORT || 4000
+const server = app.listen(PORT, () => console.log(`💬 server on port ${PORT}`))
+const io = require('socket.io')(server)
+let socketsConected = new Set()
 
+io.on('connection', onConnected)
+
+function onConnected(socket) {
+  console.log('Socket connected', socket.id)
+  socketsConected.add(socket.id)
+  io.emit('clients-total', socketsConected.size)
+
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected', socket.id)
+    socketsConected.delete(socket.id)
+    io.emit('clients-total', socketsConected.size)
+  })
+
+  socket.on('message', (data) => {
+    // console.log(data)
+    socket.broadcast.emit('chat-message', data)
+  })
+
+  socket.on('feedback', (data) => {
+    socket.broadcast.emit('feedback', data)
+  })
+}
 const filestorage =multer.diskStorage ({
   destination:(req,file,cb) => {
     cb(null,'public/images');
@@ -110,6 +136,11 @@ maintenance.belongsTo(Technicien_gct)
 Technicien_gct.hasMany(maintenance)
 spare_parts.belongsTo(equipment)
 equipment.hasMany(spare_parts)
+
+PB.belongsTo(equipment,{foreignKey:'EquipmentCode'});
+equipment.hasMany(PB,{foreignKey:'EquipmentCode'});
+PB.belongsTo(Technicien_gct);
+Technicien_gct.hasMany(PB)
 
 // synchronizing with database 
 sequelize.sync({force:false})

@@ -63,7 +63,7 @@ exports.deleteAgentSupplier=(req,res)=>{
    code=req.params.id
    BreakDown.findByPk(code).then(breakdown=>{ 
    console.log(code)
-    breakdown.destroy().then(res.redirect('/chefservice/panne'))
+    breakdown.destroy().then(res.redirect('/technicien/panne'))
     
 })
    .catch(err => console.log("ERROR!!!!!!",err) )

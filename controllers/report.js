@@ -8,6 +8,7 @@ BreakDown=require('../models/break_down')
 Maintenance=require('../models/maintenance')
 PPM =require('../models/ppm')
 PPMQuestions=require('../models/ppm_questions')
+Problem=require('../models/problems');
 
 exports.departmentEquipmentsReport=(req,res) => {
 code=req.params.code
@@ -230,7 +231,7 @@ exports.equipmentDialyInspectionReport=(req,res) => {
 
 exports.dialyInspectionReport = (req,res) =>{
  code=req.params.code
- layout=req.query.report ? 'main-layout' :'equipmentReportLayout' 
+ layout=req.query.report ? 'ChefServiceLayout' :'equipmentReportLayout' 
  di=req.query.report ? false : true
  Reports=req.query.report ? true : false
  DialyInspection.findOne({where:{Code:code},include:[{model:Technicien},{model:Equipment}]}).then(report =>{
@@ -263,7 +264,26 @@ exports.dialyInspectionReport = (req,res) =>{
  })
 }
 
-
+exports.diagnosticsReport = (req,res) =>{
+    code=req.params.code
+    layout=req.query.report ? 'ChefServiceLayout' :'equipmentReportLayout' 
+    di=req.query.report ? false : true
+    Reports=req.query.report ? true : false
+    Problem.findOne({where:{Code:code},include:[{model:Technicien},{model:Equipment}]}).then(report =>{
+       const rep = {
+           DATE:report.DATE,
+           Engineer:report.Technicien.FName+' '+report.Technicien.LName,
+           EquipmentName:report.Equipment.Name,
+           EquipmentCode:report.Equipment.Code,
+           EquipmentModel:report.Equipment.Model,
+           Description:report.DETAILS
+   
+       }
+       
+       res.render('diagnostics',{layout:layout,pageTitle:'Problems',
+           code:rep.EquipmentCode,DA:di,report:rep,Reports:Reports })  
+    })
+}
 
 exports.equipmentPpmReport=(req,res) => {
     id=req.params.Id
