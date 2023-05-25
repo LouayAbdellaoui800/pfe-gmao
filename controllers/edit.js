@@ -36,26 +36,24 @@ exports.editAgentSupplier=(req,res)=>{
 
 
 exports.editChefService=(req,res) => {
-    ID=req.params.id
-    ChefService.findOne({where:{ID:ID},include:[{model:Department}]}).then(chefservice => { 
+    id=req.params.id
+    ChefService.findOne({where:{ID:id},include:[{model:Department}]}).then(chefservice => { 
         const cs = {
               FName: chefservice.FName,
               LName: chefservice.LName,
               ID: chefservice.ID,
               Adress: chefservice.Adress,
               Phone:chefservice.Phone,
-              WorkHours:chefservice.WorkHours,
               Email:chefservice.Email,
               Age:chefservice.Age,
               Image:chefservice.Image,
               informatique:chefservice.Department.Name =='informatique' ? true : false,
-              Mecanique:chefservice.Department.Name =='Mecanique' ? true:false,
-              Industrielle:chefservice.Department.Name=='Industrielle' ? true:false,
+          
               
             }
     
     console.log(cs)    
-    res.render('editchefservice',{layout:'main-layout.handlebars' ,pageTitle:'Edit',
+    res.render('editchefservice',{layout:'admin-layout.handlebars' ,pageTitle:'Edit',
                                      CE:true,chefService:cs});
  })
  .catch(err => 
@@ -98,26 +96,20 @@ exports.editTechnicien=(req,res) => {
 }
 
 exports.editMagazinier=(req,res) => {
-   ID=req.params.id
-   Magazinier.findOne({where:{ID:ID},include:[{model:Department}]}).then(magazinier => { 
+   id=req.params.id
+   Magazinier.findOne({where:{ID:id},include:[{model:Department}]}).then(magazinier => { 
        const mg = {
              FName: magazinier.FName,
              LName: magazinier.LName,
              ID: magazinier.ID,
              Adress: magazinier.Adress,
              Phone:magazinier.Phone,
-             WorkHours:magazinier.WorkHours,
              Email:magazinier.Email,
              Age:magazinier.Age,
              Image:magazinier.Image,
-             informatique:magazinier.Department.Name =='informatique' ? true : false,
-             Mecanique:magazinier.Department.Name =='Mecanique' ? true:false,
-             Industrielle:magazinier.Department.Name=='Industrielle' ? true:false,
-             
+             informatique:magazinier.Department.Name =='informatique',
            }
-   
-   console.log(cs)    
-   res.render('editMagaziner',{layout:'admin-layout.handlebars' ,pageTitle:'Edit',
+   res.render('editMagazinier',{layout:'admin-layout.handlebars' ,pageTitle:'Edit',
                                     MG:true,magazinier:mg});
 })
 .catch(err => 
@@ -272,3 +264,4 @@ exports.editMaintenance=(req,res)=>{
      .catch(err=>console.log("errorrrrr",err))
 
 }
+

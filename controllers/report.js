@@ -9,6 +9,8 @@ Maintenance=require('../models/maintenance')
 PPM =require('../models/ppm')
 PPMQuestions=require('../models/ppm_questions')
 Problem=require('../models/problems');
+ChefService = require('../models/chef_Service');
+
 
 exports.departmentEquipmentsReport=(req,res) => {
 code=req.params.code
@@ -58,7 +60,7 @@ exports.departmentTechnicienReport=(req,res) => {
         name=dep.dataValues.Name
 
     })
-    Technicien.findAll({where:{DepartmentCode:code}}).then(tech => {
+    ChefService.findAll({where:{DepartmentCode:code}}).then(tech => {
         if(tech){
             const en = tech.map(engineer => {
                 return{
@@ -157,7 +159,7 @@ exports.agentEquipmentsReport=(req,res)=>{
 
 exports.equipmentInstallationReport=(req,res)=>{
     id=req.params.Id
-    layout=req.query.report ? 'main-layout' :'equipmentReportLayout' 
+    layout=req.query.report ? 'ChefServiceLayout' :'equipmentReportLayout' 
     Id=req.query.report ? false : true
     Reports=req.query.report ? true : false
     var date = Date(Date.now()).toString().split('GMT')[0]; 
@@ -168,14 +170,14 @@ exports.equipmentInstallationReport=(req,res)=>{
                 Name: equipment.Name,
                 Cost: equipment.Cost,
                 InstallationDate: equipment.InstallationDate,
+                ArrivalDate: equipment.ArrivalDate,
                 WarrantyDate: equipment.WarrantyDate,
-                ArrivalDate: equipment.InstallationDate,
+                LifeSpan: equipment.LifeSpanDate,
                 Model:equipment.Model,
                 SerialNumber:equipment.SerialNumber,
                 Manufacturer:equipment.Manufacturer,
-                Location:equipment.Location,
                 Notes:equipment.Notes,
-                PM:equipment.PM,
+                PM:equipment.PMP,
                 Department:equipment.Department.Name,
                 Agent:equipment.AgentSupplier.Name
               }
@@ -210,7 +212,7 @@ exports.equipmentDialyInspectionReport=(req,res) => {
                 return{
                     Code:report.Code,
                     DATE:report.DATE,
-                    Engineer:report.Technicien.FName +' '+ report.Technicien.LName ,
+                    Tech:report.Technicien.FName +' '+ report.Technicien.LName ,
                     Equipment:report.Equipment.Name,
                     EquipmentModel:report.Equipment.Model
                 }
@@ -321,7 +323,7 @@ exports.equipmentPpmReport=(req,res) => {
 
 exports.PpmReport = (req,res) =>{
     code=req.params.code
-    layout=req.query.report ? 'main-layout' :'equipmentReportLayout' 
+    layout=req.query.report ? 'ChefServiceLayout' :'equipmentReportLayout' 
     ppm=req.query.report ? false : true
     Reports=req.query.report ? true : false
     PPM.findOne({where:{Code:code},include:[{model:Technicien},{model:Equipment}]}).then(report =>{
@@ -402,8 +404,8 @@ exports.equipmentMaintenaceReport=(req,res) => {
                     Description:maintenance.Description,
                     StartDate:maintenance.StartDate,
                     EndDate:maintenance.EndDate,
-                    BreakDownCode:maintenance.BreakDown.Code,
-                    BreakDownReason:maintenance.BreakDown.Reason
+                    PanneCode:maintenance.PanneCode,
+                    BreakDownReason:maintenance.Panne.Reason
                 }
             })
             res.render('equipmentMaintenance',{layout:'equipmentReportLayout',pageTitle:'Maintenances',
@@ -426,7 +428,7 @@ Equipment.findByPk(code).then(eq => {
             return {
                 Code:sparePart.Code,
                 Name:sparePart.Name,
-                Amount:sparePart.Amount,
+                SerialNumber:sparePart.SerialNumber,
                 AgentName:sparePart.AgentSupplier.Name
             }
         })

@@ -1,67 +1,65 @@
 <div class="main-content">
     <div class="section__content section__content--p30">
         <div class="container-fluid">
-            <div class="page-wrapper" style="height: auto;" >
+            <div class="page-wrapper" style="height: auto;">
                 <div class="page-content--bge5" style="height: auto;">
                     <div class="container" style="height: auto;">
                         <div class="login-wrap">
                             <div class="login-content">
                                 <div class="login-logo">
-                                
-                                    <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>        
+
+                                    <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>
                                 </div>
                                 <div class="login-form" style="height: auto;">
                                     <form action="/magazinier/add" method="POST" enctype="multipart/form-data">
-                                        <input type="text" hidden required name="ID"  placeholder="New First name" value="{{ magazinier.ID}}" class="form-control">
-                                            <input type="text"  hidden  name="Image" value="{{ magazinier.Image }}" >
-                                            <input type="text"  hidden  name="edit" value="edit" >
+                                        <input type="text" hidden required name="ID" placeholder="New First name"
+                                            value="{{ magazinier.ID}}" class="form-control">
+                                        <input type="text" hidden name="Image" value="{{ magazinier.Image }}">
+                                        <input type="text" hidden name="edit" value="edit">
                                         <div class="form-group">
                                             <label class=" form-control-label">FName</label>
-                                            <input type="text" required name="FName"  placeholder="New First name" value="{{ magazinier.FName}}" class="form-control">
+                                            <input type="text" required name="FName" placeholder="New First name"
+                                                value="{{ magazinier.FName}}" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label class=" form-control-label">LName</label>
-                                            <input type="text" required name="LName" placeholder="New Last name" value="{{ magazinier.LName}}" class="form-control">
+                                            <input type="text" required name="LName" placeholder="New Last name"
+                                                value="{{ magazinier.LName}}" class="form-control">
                                         </div>
 
                                         <div class="form-group">
                                             <label class=" form-control-label">Phone</label>
-                                            <input type="text" required name="Phone" placeholder="New Phone"  value="{{ magazinier.Phone}}" class="form-control">
+                                            <input type="tel" required name="Phone" placeholder="Enter Phone"
+                                                class="form-control" pattern="[0-9]{8}" maxlength="8">
                                         </div>
                                         <div class="form-group">
                                             <label class=" form-control-label">Age</label>
-                                            <input type="text"  required name="Age" placeholder="New Age" value="{{ magazinier.Age}}" class="form-control">
+                                            <input type="text" required name="Age" placeholder="New Age"
+                                                value="{{ magazinier.Age}}" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label class=" form-control-label">Email</label>
-                                            <input type="email" required name="Email" placeholder="New Email" value="{{ magazinier.Email}}" class="form-control">
+                                            <input type="email" required name="Email" placeholder="Enter Email"
+                                                class="form-control"
+                                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+
                                         </div>
                                         <div class="form-group">
                                             <label class=" form-control-label">Address</label>
-                                            <input type="text" required name="Address" placeholder="New Address" value="{{ magazinier.Adress}}" class="form-control">
+                                            <input type="text" required name="Address" placeholder="New Address"
+                                                value="{{ magazinier.Adress}}" class="form-control">
                                         </div>
-                                        <div class="form-group">
-                                            <label class=" form-control-label">Work Hours</label>
-                                            <input type="text" required name="workHours" placeholder="New Work Hours" value="{{ magazinier.WorkHours}}" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class=" form-control-label">Department</label>
-                                            <select name="Department"required id="select"   class="form-control" >
-                                                <option value="informatique" {{#if magazinier.informatique}} selected {{/if}}>informatique</option>
-                                                <option value="Mecanique" {{#if magazinier.Mecanique}} selected {{/if}}>Mecanique</option>
-                                                <option value="Industrielle" {{#if magazinier.Industrielle}} selected {{/if}}>Industrielle</option>
-                                            </select>
-                                        </div>                                        
-                                        <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">ADD</button>
-                                
-                                    </form>  
+                                        <button class="au-btn au-btn--block au-btn--green m-b-20"
+                                            type="submit">ADD</button>
+
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-             </div>
+            </div>
 
         </div>
-    </div>        
+    </div>
 </div>

@@ -4,8 +4,29 @@ const addController=require('../controllers/add')
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 
-/* function checkUserRole(req, res, next) {
+function checkUserRoleForTech(req, res, next) {
   if (req.user.role === 'user') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForChef(req, res, next) {
+  if (req.user.role === 'Chef') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForAdmin(req, res, next) {
+  if (req.user.role === 'admin') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForMag(req, res, next) {
+  if (req.user.role === 'magazinier') {
     return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
   } else {
     next();
@@ -25,10 +46,10 @@ const authMiddleware = (req, res, next) => {
     console.log(err);
     res.redirect('/login');
   }
-}; */
+};
 
 router.post('/department/add',/* authMiddleware *//* ,checkUserRole, */addController.addDepartment)
-router.post('/agentSupplier/add',/* authMiddleware *//* ,checkUserRole, */addController.addAgentSupplier)
+router.post('/agentSupplier/add',authMiddleware,checkUserRoleForMag,addController.addAgentSupplier)
 router.post('/chefService/add',/* authMiddleware *//* ,checkUserRole, */addController.addChefService)
 router.post('/technicien/add',/* authMiddleware *//* ,checkUserRole, */addController.addTechnicien)
 router.post('/magazinier/add',/* authMiddleware *//* ,checkUserRole, */addController.addMagazinier)
@@ -39,6 +60,5 @@ router.post('/breakDown/add',/* authMiddleware *//* ,checkUserRole, */addControl
 router.post('/technicien/panne/add',/* authMiddleware *//* ,checkUserRole, */addController.addPanneTech)
 router.post('/workOrder/add',/* authMiddleware *//* ,checkUserRole, */addController.addWorkOrder)
 router.post('/maintenance/add',/* authMiddleware *//* ,checkUserRole, */addController.addMaintenance)
-
-
+router.post('/Etat/add',/* authMiddleware *//* ,checkUserRole, */addController.workorderEtat)
 module.exports=router;

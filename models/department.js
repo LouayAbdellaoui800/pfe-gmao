@@ -1,23 +1,18 @@
-const Sequelize=require('sequelize');
-const sequelize=require('../util/db.js');
+const Sequelize = require('sequelize');
+const sequelize = require('../util/db.js');
 
-const Department=sequelize.define('Department',{
-Code:{
-    type:Sequelize.INTEGER,
-    allowNull:false,
-    primaryKey:true,
-    unique:true
-},
-Name:{
-    type:Sequelize.STRING,
-    allowNull:false,
-    unique:true
-},
-Location:{
-    type:Sequelize.STRING,
-    allowNull:false
-}
+const Department = sequelize.define('Department', {
+    Code: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true
+    },
+    Name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+    }
 });
 
 
-module.exports=Department
+module.exports = Department

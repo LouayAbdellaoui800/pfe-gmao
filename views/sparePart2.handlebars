@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="table-data__tool">
                 <a href="#" data-toggle="modal" data-target="#modalAppointment" class="au-btn au-btn-icon au-btn--green au-btn--small">
-                <i class="zmdi zmdi-plus"></i>Add Piece De Rechange</a>
+                <i class="zmdi zmdi-plus"></i>Add SpareParts</a>
             </div>
            {{#if hasPart}} 
             <div class="row">
@@ -14,9 +14,9 @@
                         <div class="card-body">
                             <div class="card-text">Code: <span>{{this.Code}}</span></div>
                             <div class="card-text">Name: <span>{{this.Name}}</span></div>
-                            <div class="card-text">Amount: <span>{{this.Amount}}</span></div>
-                             <div class="card-text">Equipment Code: <span>{{ this.EquipmentName }} (Code:{{this.EquipmentCode}})</span></div>
-                            <div class="card-text">Agent ID: <span>{{ this.AgentSupplierName }} (Id:{{this.AgentSupplierId}})</span></div>
+                            <div class="card-text">SerialNumber: <span>{{this.SerialNumber}}</span></div>
+                             <div class="card-text">Equipment Code: <span>{{ this.EquipmentName }}</span></div>
+                            <div class="card-text">Agent ID: <span>{{ this.AgentSupplierName }}</span></div>
                         </div>
                         <div class="table-data-feature">
                             <a href="/sparePart/edit/{{ this.Code }}" class="item" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -53,8 +53,8 @@
                 </div>
                 <div class="login-form">
                         <div class="form-group">
-                            <label class=" form-control-label">Code</label>
-                            <input type="text" name="Code" required placeholder="Enter code" class="form-control">
+                            <label class=" form-control-label">SerialNumber</label>
+                            <input type="text" name="SerialNumber" required placeholder="Enter code" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class=" form-control-label">Name</label>
@@ -68,10 +68,7 @@
                                 {{/each}}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label class=" form-control-label">Amount</label>
-                            <input type="text" name="Amount" required placeholder="Enter Amount" class="form-control">
-                        </div>
+                       
                         <div class="form-group">
                             <label class=" form-control-label">Agent Id</label>
                            <select name="AgentSupplierId"required id="select" class="form-control">

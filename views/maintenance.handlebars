@@ -21,11 +21,10 @@
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Description</th>
-                                    <th>Panne</th>
-                                    <th>Department</th>
+                                    <th>BreakDown</th>
                                     <th>Equipment</th>
                                     <th>Technicien</th>
-                                    <th></th>
+                                    <th>SpareParts</th>
                                 </tr>
                             </thead>
                             {{#if hasMaintenance}} 
@@ -37,10 +36,10 @@
                                     <td>{{this.StartDate}}</td>
                                     <td>{{this.EndDate}}</td>
                                     <td>{{this.Description}}</td>
-                                    <td>{{this.BreakDownCode}}</td>
-                                    <td>{{this.Department}}</td>
+                                    <td>{{this.BreakDownCode}}{{this.BreakDownR}}</td>
                                     <td><img src="images/{{this.EquipmentImage}}" style="height: 50px; width:50px; border-radius: 50%;" >  {{this.EquipmentName}}-{{this.EquipmentCode}}</td>
                                     <td> <img src="images/{{this.TechnicienImage}}" style="height: 50px; width:50px; border-radius: 50%;" > {{this.Technicien}} </td>
+                                    <td><img src="images/{{this.SparePartImage}}" style="height: 50px; width:50px; border-radius: 50%;" >  {{this.SparePartName}}</td>
                                     <td>
                                        <div class="table-data-feature">
                                                 <a href="/maintenance/edit/{{ this.Id }}" class="item" data-toggle="tooltip" data-placement="top" title="Edit">
@@ -88,6 +87,14 @@
                             <select name="ID"required id="select" class="form-control">
                                 {{#each chef}}
                                     <option value="{{this.ID}}">{{this.FName}} {{this.LName}} {{this.ID}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class=" form-control-label">Spare Parts</label>
+                            <select name="SparePartCode"required id="select" class="form-control">
+                                {{#each spare}}
+                                    <option value="{{this.Code}}">{{this.SerialNumber}} {{this.Name}} {{this.LName}} </option>
                                 {{/each}}
                             </select>
                         </div>

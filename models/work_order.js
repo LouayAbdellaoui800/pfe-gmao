@@ -21,15 +21,14 @@ Description:{
     type:Sequelize.TEXT,
     allowNull:false
 },
-Cost:{
-    type:Sequelize.INTEGER,
-    allowNull:false
-},
 Priority:{
     type:Sequelize.STRING,
     allowNull:false
+},
+Etat:{
+    type:Sequelize.STRING,
+    allowNull:false
 }
-
 
 })
 module.exports=Work_order

@@ -49,7 +49,7 @@
                 <nav class="navbar-sidebar">
                     <ul class="list-unstyled navbar__list">
                <li class="has-sub">
-                    <a href="/equipments">
+                    <a href="/equipment">
                 <i class="fas fa-copy"></i>Equipment</a>
                 </li>            
                 <li class="{{#if ID }}active{{/if}} has-sub">
@@ -58,19 +58,19 @@
                 </li>                        
                 <li class="{{#if PPM }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/ppm/{{ code }}">
-                        <i class="fas fa-copy"></i>Maintenance Préventive Planifié</a>
+                        <i class="fas fa-copy"></i>Planned Preventive Maintenance</a>
                 </li> 
                 <li class="{{#if DI }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/dailyInspection/{{ code }}">
-                        <i class="fas fa-copy"></i>Inspection Quotidienne</a>
+                        <i class="fas fa-copy"></i>Daily Inspection</a>
                 </li>    
                    <li class="{{#if SP }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/spareParts/{{ code }}">
-                        <i class="fas fa-copy"></i>Piéce de Rechange</a>
+                        <i class="fas fa-copy"></i>SpareParts</a>
                 </li>    
                   <li class="{{#if BD }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/breakDowns/{{ code }}">
-                        <i class="fas fa-copy"></i>Panne</a>
+                        <i class="fas fa-copy"></i>Breakdowns</a>
                 </li> 
                <li class="{{#if M }}active{{/if}} has-sub">
                     <a class="js-arrow" href="/report/equipment/maintenance/{{ code }}">

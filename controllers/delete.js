@@ -1,11 +1,12 @@
 const AgentSupplier = require('../models/agent_supplier')
-const Technicien=require('../models/chef_Service')
 const Equipment =require('../models/equipment')
 const SparePart=require('../models/spare_part')
 const BreakDown=require('../models/break_down')
 const WorkOrder=require('../models/work_order')
 const Maintenance = require('../models/maintenance')
-
+const ChefService=require('../models/chef_Service');
+const Technicien=require('../models/technicien');
+const Magazinier=require('../models/magazinier');
 
 exports.deleteAgentSupplier=(req,res)=>{
     id=req.params.id
@@ -20,8 +21,8 @@ exports.deleteAgentSupplier=(req,res)=>{
 
 
  exports.deleteTechnicien=(req,res)=>{
-    dssn=req.params.id
-    Technicien.findByPk(dssn).then(technicien =>{ 
+    id=req.params.id
+    Technicien.findByPk(id).then(technicien =>{ 
       technicien.destroy().then( res.redirect('/chefService'))
     
  })
@@ -30,6 +31,27 @@ exports.deleteAgentSupplier=(req,res)=>{
  
  }
 
+exports.deleteChef=(req,res)=>{
+   id=req.params.id
+   ChefService.findByPk(id).then(chefservice =>{ 
+     chefservice.destroy().then( res.redirect('/chefService'))
+   
+})
+   .catch(err => console.log("ERROR!!!!!!",err) )
+
+
+}
+
+exports.deleteMag=(req,res)=>{
+   id=req.params.id
+   Magazinier.findByPk(id).then(magazinier =>{ 
+      magazinier.destroy().then( res.redirect('/chefService'))
+   
+})
+   .catch(err => console.log("ERROR!!!!!!",err) )
+
+
+}
 
  exports.deleteEquipment=(req,res)=>{
     code=req.params.id

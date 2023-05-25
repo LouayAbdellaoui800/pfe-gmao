@@ -13,7 +13,7 @@
                         <div class="card-text"><strong>Device:</strong> {{ equipment.Name}}</div>
                         <div class="card-text"><strong>Model:</strong> {{equipment.Model}}</div>
                          <div class="card-text"><strong>Department:</strong> {{equipment.Department}}</div>
-                        <div class="card-text"><strong>Location:</strong> {{equipment.Location}}</div>
+                        <div class="card-text"><strong>SerialNumber:</strong> {{equipment.SerialNumber}}</div>
                     </div>
                     <div class="row">
                         <!-- table 1 DATA-->
@@ -64,14 +64,19 @@
                                                 <td hidden>//</td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Purchase price: </strong> <span style="color:#0056b3"> {{ equipment.Cost}} L.E</span> </td>
+                                                <td><strong>Purchase price: </strong> <span style="color:#0056b3"> {{ equipment.Cost}} DT</span> </td>
                                                 <td hidden>DT</td>
                                             </tr>
                                             <tr>
                                                 <td><strong>PM schedule </strong>  <strong style="color:#0056b3">{{equipment.PM}}</strong> </td>
                                                 <td hidden> //</td>
                                                 
-                                            </tr>   
+                                            </tr>  
+                                             <tr>
+                                                <td><strong>LifeSpan </strong>  <strong style="color:#0056b3">{{equipment.LifeSpan}}</strong> </td>
+                                                <td hidden> //</td>
+                                                
+                                            </tr> 
                                         </thead>
                                     </table>
                                 </div>   

@@ -118,6 +118,7 @@ equipment.belongsTo(agent_supplier);
 agent_supplier.hasMany(equipment);
 equipment.belongsTo(department);
 department.hasMany(equipment);
+
 work_order.belongsTo(equipment);
 equipment.hasMany(work_order);
 break_down.belongsTo(equipment);
@@ -141,6 +142,9 @@ PB.belongsTo(equipment,{foreignKey:'EquipmentCode'});
 equipment.hasMany(PB,{foreignKey:'EquipmentCode'});
 PB.belongsTo(Technicien_gct);
 Technicien_gct.hasMany(PB)
+
+maintenance.belongsTo(spare_parts);
+spare_parts.hasMany(maintenance);
 
 // synchronizing with database 
 sequelize.sync({force:false})

@@ -25,10 +25,7 @@
                                             <label class=" form-control-label">End Date</label>
                                             <input type="date" required name="EndDATE"  placeholder="New Datee" value="{{ workOrder.EndDate}}" class="form-control">
                                         </div>
-                                        <div class="form-group">
-                                            <label class=" form-control-label">Cost</label>
-                                            <input type="text" required name="Cost" placeholder="New Cost" value="{{ workOrder.Cost}}" class="form-control">
-                                        </div>
+                                        
                                         <div class="form-group">
                                             <label class=" form-control-label">Equipment Code</label>
                                             <input type="text" required name="EquipmentCode" placeholder="New Equipment Code"  value="{{ workOrder.EquipmentCode }}" class="form-control">
@@ -43,6 +40,13 @@
                                                 <option value="Low" {{#if workOrder.low}} selected {{/if}}>Low</option>
                                                 <option value="Medium" {{#if workOrder.med}} selected {{/if}}>Medium</option>
                                                 <option value="High" {{#if workOrder.high}} selected {{/if}}>High</option>
+                                            </select>
+                                        </div>  
+                                         <div class="form-group">
+                                            <label class=" form-control-label">Etat</label>
+                                            <select name="Etat"required id="select"  class="form-control" >
+                                                <option value="In Progress" {{#if workOrder.IP}} selected {{/if}}>In Progress</option>
+                                                <option value="Completed" {{#if workOrder.CD}} selected {{/if}}>Completed</option>
                                             </select>
                                         </div>                                        
                                         <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Edit</button>

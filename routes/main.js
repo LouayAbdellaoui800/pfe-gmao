@@ -55,7 +55,9 @@ router.get('/breakdown',authMiddleware,checkUserRoleForTech,checkUserRoleForAdmi
 router.get('/equipment',authMiddleware,checkUserRoleForTech,checkUserRoleForAdmin,checkUserRoleForMag,homeController.chefequipment)
 router.get('/equipments',authMiddleware,checkUserRoleForTech,checkUserRoleForChef,homeController.equipment)
 router.get('/workOrder',authMiddleware,checkUserRoleForTech,checkUserRoleForAdmin,checkUserRoleForMag,homeController.workOrder)
-router.get('/agentSupplier',authMiddleware,checkUserRoleForTech,checkUserRoleForChef,checkUserRoleForAdmin,homeController.agentSupplier)
+router.get('/agentSupplier',authMiddleware,checkUserRoleForTech,checkUserRoleForAdmin,homeController.agentSupplierChef)
+router.get('/agentSuppliers',authMiddleware,checkUserRoleForTech,checkUserRoleForAdmin,homeController.agentSupplier)
+
 router.get('/sparePart',authMiddleware,checkUserRoleForTech,checkUserRoleForChef,checkUserRoleForAdmin,homeController.sparePart)
 
 router.get('/chefservice',authMiddleware,checkUserRoleForTech,checkUserRoleForChef,checkUserRoleForMag,homeController.chefService)

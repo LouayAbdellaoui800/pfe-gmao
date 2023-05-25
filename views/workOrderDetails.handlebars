@@ -2,28 +2,43 @@
     <div class="card-body card-block" style="height: 100%;">
         <div class="login-content" style="height: 100%;">
             <div class="login-logo">
-              
+
                 <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>
             </div>
             <h3 class="title-3 m-b-30">
-            <i class="zmdi zmdi-account-calendar"></i>PPM</h3>
+                <i class="zmdi zmdi-account-calendar"></i>PPM
+            </h3>
             <div class="card-body" style="height: 100%;">
-                <div class="card-text">Code: {{order.Code}} </div>                            
-                <div class="card-text">Device: name: {{order.EquipmentName}} ,model:{{order.EquipmentModel}} ,Code:{{order.EquipmentCode}} </div>
+                <div class="card-text">Code: {{order.Code}} </div>
+                <div class="card-text">Device: name: {{order.EquipmentName}}
+                    ,model:{{order.EquipmentModel}},Code:{{order.EquipmentCode}} </div>
                 <div class="card-text">Start Date: {{order.StartDate}}</div>
                 <div class="card-text">End Date: {{order.EndDate}}</div>
                 <div class="card-text">Description: {{order.Description}}</div>
                 <div class="card-text">Priority: {{order.Priority}}</div>
-                <div class="card-text">Cost: {{order.Cost}} </div>
+                <div class="card-text">Etat: {{order.Etat}} </div>
 
             </div>
-            
+            <form action="/Etat/add" method="POST">
+                <input type="text" hidden required name="Code" placeholder="New Code" value="{{ order.Code}}"
+                    class="form-control">
+                <div class="form-group">
+                    <label class=" form-control-label">Etat</label>
+                    <select name="Etat" required id="select" class="form-control">
+                        <option value="In Progress" {{#if order.IP}} selected {{/if}}>In Progress</option>
+                        <option value="Completed" {{#if order.CD}} selected {{/if}}>Completed</option>
+                    </select>
+                </div>
+                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Finished</button>
+            </form>
+
             <div class="top-campaign" style="height: 100%;">
                 <div class="table-responsive">
                     <table class="table table-top-campaign">
-                    </table>   
+                    </table>
                 </div>
             </div>
-                
+
+
+        </div>
     </div>
- </div>

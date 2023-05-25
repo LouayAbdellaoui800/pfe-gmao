@@ -5,8 +5,29 @@ const deleteController=require('../controllers/delete')
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 
-/* function checkUserRole(req, res, next) {
+function checkUserRoleForTech(req, res, next) {
   if (req.user.role === 'user') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForChef(req, res, next) {
+  if (req.user.role === 'Chef') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForAdmin(req, res, next) {
+  if (req.user.role === 'admin') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForMag(req, res, next) {
+  if (req.user.role === 'magazinier') {
     return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
   } else {
     next();
@@ -26,16 +47,19 @@ const authMiddleware = (req, res, next) => {
     console.log(err);
     res.redirect('/login');
   }
-}; */
+};
 
-router.get('/agentSupplier/delete/:id',deleteController.deleteAgentSupplier);
-router.get('/technicien/delete/:id',deleteController.deleteTechnicien);
-router.get('/equipment/delete/:id',deleteController.deleteEquipment);
-router.get('/sparePart/delete/:id',deleteController.deleteSparePart);
-router.get('/breakDown/delete/:id',deleteController.deleteBreakDown);
-router.get('/technicien/panne/delete/:id',deleteController.deletepanneChef);
-router.get('/workOrder/delete/:id',deleteController.deleteWorkOrder);
-router.get('/maintenance/delete/:id',deleteController.deleteMaintenance);
+router.get('/agentSupplier/delete/:id',authMiddleware,checkUserRoleForMag,deleteController.deleteAgentSupplier);
+router.get('/technicien/delete/:id',authMiddleware,deleteController.deleteTechnicien);
+router.get('/chefservice/delete/:id',authMiddleware,deleteController.deleteChef);
+router.get('/magazinier/delete/:id',authMiddleware,deleteController.deleteMag);
+
+router.get('/equipment/delete/:id',authMiddleware,deleteController.deleteEquipment);
+router.get('/sparePart/delete/:id',authMiddleware,deleteController.deleteSparePart);
+router.get('/breakDown/delete/:id',authMiddleware,deleteController.deleteBreakDown);
+router.get('/technicien/panne/delete/:id',authMiddleware,deleteController.deletepanneChef);
+router.get('/workOrder/delete/:id',authMiddleware,deleteController.deleteWorkOrder);
+router.get('/maintenance/delete/:id',authMiddleware,deleteController.deleteMaintenance);
 
 
 

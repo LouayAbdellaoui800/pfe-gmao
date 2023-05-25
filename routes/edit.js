@@ -5,8 +5,29 @@ const editController=require('../controllers/edit')
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.JWT_SECRET_KEY;
 
-function checkUserRole(req, res, next) {
+function checkUserRoleForTech(req, res, next) {
   if (req.user.role === 'user') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForChef(req, res, next) {
+  if (req.user.role === 'Chef') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForAdmin(req, res, next) {
+  if (req.user.role === 'admin') {
+    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+  } else {
+    next();
+  }
+}
+function checkUserRoleForMag(req, res, next) {
+  if (req.user.role === 'magazinier') {
     return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
   } else {
     next();
@@ -28,7 +49,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-router.get('/agentSupplier/edit/:id',/* authMiddleware,checkUserRole, */editController.editAgentSupplier);
+router.get('/agentSupplier/edit/:id',authMiddleware,checkUserRoleForMag,editController.editAgentSupplier);
 
 router.get('/chefservice/edit/:id',/* authMiddleware,checkUserRole, */editController.editChefService);
 router.get('/technicien/edit/:id',/* authMiddleware,checkUserRole, */editController.editTechnicien);
@@ -40,7 +61,6 @@ router.get('/breakDown/edit/:id',/* authMiddleware,checkUserRole, */editControll
 router.get('/technicien/panne/edit/:id',/* authMiddleware,checkUserRole, */editController.editPanneTech);
 router.get('/workOrder/edit/:id',/* authMiddleware,checkUserRole, */editController.editWorkOrder);
 router.get('/maintenance/edit/:id',/* authMiddleware,checkUserRole, */editController.editMaintenance);
-
 
 
 

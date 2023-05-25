@@ -19,7 +19,6 @@
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Code</th>
-                                                <th>Location</th>
                                                 <th>Chef Serivce</th>
                                                 <th>Equipment</th>
                                                 <th></th>
@@ -33,8 +32,8 @@
                                                     <td>
                                                         <span class="block-email">{{ this.Code }}</span>
                                                     </td>
-                                                    <td class="desc">{{ this.Location }}</td>
-                                                    <td>{{ this.Chef }}</td>
+{{!--                                                     <td class="desc">{{ this.Location }}</td>
+ --}}                                                    <td>{{ this.Chef }}</td>
                                                     <td>{{ this.Equipments }}</td> 
                                                     <td>
                                                         <div class="table-data-feature">
@@ -82,15 +81,11 @@
                                     <label class=" form-control-label">Department</label>
                                     <select name="Name" required id="select" class="form-control">
                                         <option value="Informatique">Informatique</option>
-                                        <option value="Mecanique">Mecanique</option>
-                                        <option value="Industrielle">Industrielle</option>
+                                
                                     
                                     </select>
                                 </div>
-                        <div class="form-group">
-                            <label class=" form-control-label">Location</label>
-                            <input type="text" name="Location" placeholder="Enter Location" required class="form-control">
-                        </div>
+                       
                         <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">ADD</button>
                 </div>
             </form>

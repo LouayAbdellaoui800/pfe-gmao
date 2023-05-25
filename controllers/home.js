@@ -70,7 +70,7 @@ exports.signIn = (req, res) => {
                                         const token = jwt.sign({ email: email, role: 'magazinier', id: magazinier.ID }, process.env.JWT_SECRET_KEY);
                                         res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
                                         req.session.ID = magazinier.ID;
-                                        res.redirect("/agentSupplier");
+                                        res.redirect("/agentSuppliers");
                                     } else {
                                         res.redirect('/');
                                     }
@@ -356,60 +356,138 @@ exports.department = (req, res) => {
 
 }
 exports.maintenance = (req, res) => {
-    Maintenance.findAll({ include: [{ model: BreakDown, include: [{ model: Equipment, include: [{ model: Department }] }] }, { model: Technicien }] }).then(maintenances => {
-        const m = maintenances.map(main => {
-            return {
-                Id: main.Id,
-                StartDate: main.StartDate,
-                EndDate: main.EndDate,
-                BreakDownCode: main.Panne.Code,
-                EquipmentName: main.Panne.Equipment.Name,
-                EquipmentCode: main.Panne.Equipment.Code,
-                EquipmentImage: main.Panne.Equipment.Image,
-                Technicien: main.Technicien.FName + ' ' + main.Technicien.LName,
-                TechnicienImage: main.Technicien.Image,
-                Department: main.Panne.Equipment.Department.Name,
-                Description: main.Description
-            }
-
-        })
-        BreakDown.findAll({ include: [{ model: Equipment }] }).then(breakDowns => {
-            const bd = breakDowns.map(breakDown => {
-                return {
-                    Code: breakDown.Code,
-                    Date: breakDown.DATE,
-                    EquipmentName: breakDown.Equipment.Name,
-                    EquipmentCode: breakDown.Equipment.Code,
-                    Reason: breakDown.Reason
-                }
-
-            })
-
-            Technicien.findAll().then(chefServices => {
-                const en = chefServices.map(ChefService => {
-                    return {
-                        FName: ChefService.FName,
-                        LName: ChefService.LName,
-                        ID: ChefService.ID
+    Maintenance.findAll({
+        include: [
+            {
+                model: BreakDown,
+                include: [
+                    {
+                        model: Equipment,
+                        include: [
+                            {
+                                model: Department
+                            }
+                        ]
                     }
-                })
-                res.render('maintenance', {
-                    layout: "ChefServiceLayout", pageTitle: 'Maintenance',
-                    Maintenance: true, Maintenances: m,
-                    hasMaintenance: m.length > 0, chef: en, breakDowns: bd
-                });
-            })
-        })
-
-
-    }).catch(err => {
-        if (err)
-            console.log(err)
-        res.render('error', { layout: false, pageTitle: 'Error', href: '/home', message: 'Sorry !!! Could Not get any maintenance' })
+                ]
+            },
+            {
+                model: Technicien
+            },
+            {
+                model: SparePart
+            }
+        ]
     })
+        .then(maintenances => {
+            const m = maintenances.map(main => {
+                return {
+                    Id: main.Id,
+                    StartDate: main.StartDate,
+                    EndDate: main.EndDate,
+                    BreakDownCode: main.Panne.Code,
+                    BreakDownR: main.Panne.Reason,
+                    EquipmentName: main.Panne.Equipment.Name,
+                    EquipmentCode: main.Panne.Equipment.Code,
+                    EquipmentImage: main.Panne.Equipment.Image,
+                    Technicien: main.Technicien.FName + ' ' + main.Technicien.LName,
+                    TechnicienImage: main.Technicien.Image,
+                    SparePartImage: main.SparePart.Image,
+                    SparePartName: main.SparePart.Name,
+                    Department: main.Panne.Equipment.Department.Name,
+                    Description: main.Description
+                };
+            });
 
+            BreakDown.findAll({
+                include: [
+                    {
+                        model: Equipment
+                    }
+                ]
+            })
+                .then(breakDowns => {
+                    const bd = breakDowns.map(breakDown => {
+                        return {
+                            Code: breakDown.Code,
+                            Date: breakDown.DATE,
+                            EquipmentName: breakDown.Equipment.Name,
+                            EquipmentCode: breakDown.Equipment.Code,
+                            Reason: breakDown.Reason
+                        };
+                    });
 
-}
+                    Technicien.findAll()
+                        .then(chefServices => {
+                            const en = chefServices.map(ChefService => {
+                                return {
+                                    FName: ChefService.FName,
+                                    LName: ChefService.LName,
+                                    ID: ChefService.ID
+                                };
+                            });
+
+                            SparePart.findAll()
+                                .then(SpareParts => {
+                                    const sp = SpareParts.map(SparePart => {
+                                        return {
+                                            SerialNumber: SparePart.SerialNumber,
+                                            Name: SparePart.Name,
+                                            Code: SparePart.Code
+                                        };
+                                    });
+
+                                    res.render('maintenance', {
+                                        layout: 'ChefServiceLayout',
+                                        pageTitle: 'Maintenance',
+                                        Maintenance: true,
+                                        Maintenances: m,
+                                        hasMaintenance: m.length > 0,
+                                        chef: en,
+                                        spare: sp,
+                                        breakDowns: bd
+                                    });
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    res.render('error', {
+                                        layout: false,
+                                        pageTitle: 'Error',
+                                        href: '/home',
+                                        message: 'Sorry !!! Could not get any maintenance'
+                                    });
+                                });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            res.render('error', {
+                                layout: false,
+                                pageTitle: 'Error',
+                                href: '/home',
+                                message: 'Sorry !!! Could not get any maintenance'
+                            });
+                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.render('error', {
+                        layout: false,
+                        pageTitle: 'Error',
+                        href: '/home',
+                        message: 'Sorry !!! Could not get any maintenance'
+                    });
+                });
+        })
+        .catch(err => {
+            console.error(err);
+            res.render('error', {
+                layout: false,
+                pageTitle: 'Error',
+                href: '/home',
+                message: 'Sorry !!! Could not get any maintenance'
+            });
+        });
+};
 
 exports.panneTech = (req, res) => {
     BreakDown.findAll({ include: [{ model: Equipment, include: [{ model: Department }] }] }).then(breakdowns => {
@@ -553,7 +631,7 @@ exports.sparePart = (req, res) => {
             return {
                 Code: sparepart.Code,
                 Name: sparepart.Name,
-                Amount: sparepart.Amount,
+                SerialNumber: sparepart.SerialNumber,
                 Image: sparepart.Image,
                 AgentSupplierId: sparepart.AgentSupplier.dataValues.Id,
                 AgentSupplierName: sparepart.AgentSupplier.dataValues.Name,
@@ -592,6 +670,29 @@ exports.sparePart = (req, res) => {
     })
 }
 
+exports.agentSupplierChef = (req, res) => {
+    AgentSupplier.findAll().then(agentsuppliers => {
+        const as = agentsuppliers.map(agentsupplier => {
+            return {
+                Name: agentsupplier.Name,
+                Id: agentsupplier.Id,
+                Adress: agentsupplier.Adress,
+                Phone: agentsupplier.Phone,
+                Email: agentsupplier.Email,
+                Notes: agentsupplier.Notes
+            }
+        })
+
+        res.render('agentSupplier', {
+            layout: "ChefServiceLayout", pageTitle: 'AgentSupplier',
+            AS: true, agentSuppliers: as,
+            hasAgentSupplier: as.length > 0
+        });
+    }).catch(err => {
+        if (err)
+            res.render('error', { layout: false, pageTitle: 'Error', href: '/home', message: 'Sorry !!! Could Not Get Agents' })
+    })
+}
 exports.agentSupplier = (req, res) => {
     AgentSupplier.findAll().then(agentsuppliers => {
         const as = agentsuppliers.map(agentsupplier => {
@@ -621,7 +722,9 @@ exports.workOrder = (req, res) => {
         const wd = workorders.map(workD => {
             return {
                 Code: workD.Code,
-                Cost: workD.Cost,
+                IP: workD.Etat == 'In Progress' ? true : false,
+                CD: workD.Etat == 'Completed' ? true : false,
+                Etat: workD.Etat,
                 StartDate: workD.StartDate,
                 EndDate: workD.EndDate,
                 med: workD.Priority == 'Medium' ? true : false,
@@ -710,15 +813,15 @@ exports.equipment = (req, res) => {
                 Code: equipment.Code,
                 Name: equipment.Name,
                 Cost: equipment.Cost,
-                PM: equipment.PM,
+                PM: equipment.PMP,
                 Image: equipment.Image,
                 InstallationDate: equipment.InstallationDate,
                 ArrivalDate: equipment.ArrivalDate,
                 WarrantyDate: equipment.WarrantyDate,
+                LifeSpan: equipment.LifeSpanDate,
                 Model: equipment.Model,
                 SerialNumber: equipment.SerialNumber,
                 Manufacturer: equipment.Manufacturer,
-                Location: equipment.Location,
                 Notes: equipment.Notes,
                 DepartmentCode: equipment.Department.dataValues.Name,
                 AgentSupplierId: equipment.AgentSupplier.dataValues.Name
@@ -754,15 +857,15 @@ exports.chefequipment = (req, res) => {
                 Code: equipment.Code,
                 Name: equipment.Name,
                 Cost: equipment.Cost,
-                PM: equipment.PM,
+                PM: equipment.PMP,
                 Image: equipment.Image,
                 InstallationDate: equipment.InstallationDate,
                 ArrivalDate: equipment.ArrivalDate,
                 WarrantyDate: equipment.WarrantyDate,
+                LifeSpan: equipment.LifeSpanDate,
                 Model: equipment.Model,
                 SerialNumber: equipment.SerialNumber,
                 Manufacturer: equipment.Manufacturer,
-                Location: equipment.Location,
                 Notes: equipment.Notes,
                 DepartmentCode: equipment.Department.dataValues.Name,
                 AgentSupplierId: equipment.AgentSupplier.dataValues.Name
@@ -947,7 +1050,7 @@ exports.workorderDescription = (req, res) => {
             EquipmentModel: order.Equipment.Model,
             EquipmentCode: order.Equipment.Code,
             Priority: order.Priority,
-            Cost: order.Cost,
+            Etat: order.Etat,
             StartDate: order.StartDate,
             EndDate: order.EndDate,
             Description: order.Description
@@ -969,7 +1072,6 @@ exports.workorderDescription = (req, res) => {
 
     })
 }
-
 
 
 
