@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html >
+ <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
 <head>
     <!-- Required meta tags-->
     <meta charset="UTF-8">
@@ -40,19 +40,23 @@
     <section>
 	    <div class="screen">
 		    <div class="screen__content">
+                
 			<form class="login" action="/signIn" method="POST">
-				<div class="login__field">
+                 {{#if error}} 
+            <p class="error-message">{{error}}</p>
+            {{/if }}
+               				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
-					<input type="text" class="login__input" name="email" placeholder="User name / Email">
+					<input type="Email" required class="login__input" name="email" placeholder=" Email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
 					<input type="password" class="login__input" Name="password" placeholder="Password">
 				</div>
-				<button class="button login__submit">
+				<button class="button login__submit" id="bl">
 					<span class="button__text">Log In Now</span>
 					<i class="button__icon fas fa-chevron-right"></i>
-				</button>				
+				</button>
 			</form>
 			
 		</div>
@@ -88,7 +92,61 @@
 
     <!-- Main JS-->
     <script src="js/main.js"></script>
+<script>
 
+// const speechSynthesis = window.speechSynthesis;
+
+// const emailInput = document.querySelector('input[name="email"]');
+// let hasMouseEntered = false;
+// emailInput.addEventListener('mousemove', () => {
+//     if (!hasMouseEntered) {
+//     hasMouseEntered = true;
+//     const emailText = "أنت الآن في حقل البريد الإلكتروني";;
+//     const mousemoveUtterance = new SpeechSynthesisUtterance(emailText);
+//     mousemoveUtterance.lang = 'ar-SA'; // Set language to Arabic (Egypt)
+//     console.log(mousemoveUtterance.lang);
+//     speechSynthesis.speak(mousemoveUtterance);
+//   }
+// });
+
+// emailInput.addEventListener('input', () => {
+//   const emailText = emailInput.value;
+//   const utterance = new SpeechSynthesisUtterance(emailText);
+//   speechSynthesis.speak(utterance);
+// });
+// emailInput.addEventListener('mouseleave', () => {
+//   hasMouseEntered = false;
+//   const emailText = "You are now leaving the email field";
+//   const mousemoveUtterance = new SpeechSynthesisUtterance(emailText);
+//   speechSynthesis.speak(mousemoveUtterance);
+// });
+
+// // Password field
+// const passInput = document.querySelector('input[name="password"]');
+// hasMouseEntered = false;
+
+// passInput.addEventListener('mousemove', () => {
+//   if (!hasMouseEntered) {
+//     hasMouseEntered = true;
+//     const passText = "You are now in the password field";
+//     const mousemoveUtterance = new SpeechSynthesisUtterance(passText);
+//     speechSynthesis.speak(mousemoveUtterance);
+//   }
+// });
+
+// passInput.addEventListener('input', () => {
+//   const passText = passInput.value;
+//   const utterance = new SpeechSynthesisUtterance(passText);
+//   speechSynthesis.speak(utterance);
+// });
+
+// passInput.addEventListener('mouseleave', () => {
+//   hasMouseEntered = false;
+//   const passText = "You are now leaving the password field";
+//   const mousemoveUtterance = new SpeechSynthesisUtterance(passText);
+//   speechSynthesis.speak(mousemoveUtterance);
+// });
+</script>
 </body>
 
 </html>

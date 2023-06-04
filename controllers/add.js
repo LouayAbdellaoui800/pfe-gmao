@@ -29,101 +29,53 @@ exports.addDepartment = (req, res) => {
 
 
 
-exports.addAgentSupplier = (req, res) => {
-    id = req.body.Id
-    name = req.body.Name
-    address = req.body.Address
-    phone = req.body.Phone
-    email = req.body.Email
-    notes = req.body.Notes
-    AgentSupplier.findByPk(id).then(agentSupplier => {
-        if (agentSupplier) {
-            agentSupplier.Id = id;
-            agentSupplier.Name = name;
-            agentSupplier.Address = address;
-            agentSupplier.Phone = phone;
-            agentSupplier.Email = email;
-            agentSupplier.Notes = notes;
-            return agentSupplier.save();
-        }
-        else {
-            return AgentSupplier.create({
-                Id: id, Name: name, Adress: address,
-                Phone: phone, Email: email, Notes: notes
-            })
-        }
-
-    }).then(r => res.redirect('/agentSupplier'))
-        .catch(err => console.log("ERROR!!!!!!", err))
-}
-
-
-
-/* exports.addChefService = (req, res) => {
-    id = req.body.ID
-    fname = req.body.FName
-    lname = req.body.LName
-    address = req.body.Address
-    phone = req.body.Phone
-    email = req.body.Email
-    if (req.body.edit) {
-        image = req.body.Image
-    }
-    else {
-        image = req.file.path.split('\\')
-        if (image.length > 1)
-            image = req.file.path.split('\\').pop()
-        else
-            image = req.file.path.split('/').pop()
-
-    }
-    age = req.body.Age
-    department = req.body.Department
-    var departmentCode = null
-    if (req.body.Password)
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(req.body.Password, salt, (err, hash) => {
-                pass = hash
-            });
-
+exports.addAgentSupplier = async (req, res) => {
+    const { Id, Name, Address, Phone, Email, Notes } = req.body;
+  
+    try {
+      const existingTechnicien = await Technicien.findOne({ where: { Email } });
+      const existingservicemanager = await ChefService.findOne({ where: { Email } });
+      const existingstorekeeper = await Magazinier.findOne({ where: { Email } });
+      const existingTechniciennumber = await Technicien.findOne({ where: { Phone } });
+      const existingservicemanagernumber = await ChefService.findOne({ where: { Phone } });
+      const existingstorekeepernumber = await Magazinier.findOne({ where: { Phone } });
+      //const existingagent = await AgentSupplier.findOne({ where: { Email } });
+      const existingagentnumber = await AgentSupplier.findOne({ where: { Phone } });
+  
+      if (existingTechnicien || existingservicemanager || existingstorekeeper) {
+        return res.send('please choose a different email address');
+      }
+  
+      if (existingTechniciennumber || existingservicemanagernumber || existingstorekeepernumber) {
+        return res.send('please choose a different phone number');
+      }
+  
+      const agentSupplier = await AgentSupplier.findByPk(Id);
+  
+      if (agentSupplier) {
+        agentSupplier.Name = Name;
+        agentSupplier.Address = Address;
+        agentSupplier.Phone = Phone;
+        agentSupplier.Email = Email;
+        agentSupplier.Notes = Notes;
+        await agentSupplier.save();
+      } else {
+        await AgentSupplier.create({
+          Id,
+          Name,
+          Adress: Address,
+          Phone,
+          Email,
+          Notes,
         });
-        
-    Department.findOne({ where: { Name: department } }).then(department => {
-        if (department) {
-            departmentCode = department.Code
-            ChefService.findByPk(id).then(chefservice => {
-               try{
-                const existingMagazinier = Magazinier.findOne({ where: { Email: email } });
-                const existingChefService = ChefService.findOne({ where: { Email: email } });
-                if (existingMagazinier || existingChefService) {
-                    res.send('Email or Phone number is Already existed ');
-                }
-            }
-            catch(error){}
-                if (chefservice) {
-                    chefservice.FName = fname
-                    chefservice.LName = lname
-                    chefservice.Adress = address
-                    chefservice.Phone = phone
-                    chefservice.Email = email
-                    chefservice.Age = age
-                    chefservice.save().then(r => res.redirect('/chefservice'))
-                }
-                
-                else {
-                    ChefService.create({ FName: fname, LName: lname, Adress: address, Phone: phone, Image: image, Email: email, Age: age, DepartmentCode: departmentCode, Password: pass }).then(r => res.redirect('/chefService'))
-                }
-
-            })
-        }
-        else {
-            res.render('error', { layout: false, pageTitle: 'Error', href: '/chefService', message: 'Sorry !!! Could Not Get this Department' })
-
-        }
-    })
-        .catch(err => res.render('error', { layout: false, pageTitle: 'Error', href: '/equipment', message: 'Sorry !!! Could Not Get ChefServices' })
-        )
-} */
+      }
+  
+      res.redirect('/agentSupplier');
+    } catch (error) {
+      console.log('ERROR!!!!!!', error);
+      res.send("Email adress already existing !! ")
+    }
+  };
 
 exports.addChefService = async (req, res) => {
     const id = req.body.ID;
@@ -152,12 +104,20 @@ exports.addChefService = async (req, res) => {
     try {
         const existingTechnicien = await Technicien.findOne({ where: { Email: email } });
         const existingMagazinier = await Magazinier.findOne({ where: { Email: email } });
+       // const existingnumber = await ChefService.findOne({ where: { Phone: phone } });
+       // const existingServicemanager = await ChefService.findOne({ where: { Email: email } });
+        const existingnumber2 = await Magazinier.findOne({ where: { Phone: phone } });
+        const existingnumber3 = await Technicien.findOne({ where: { Phone: phone } });
+
+
 
         if (existingTechnicien || existingMagazinier) {
-            res.send('/error please try again');
+            res.send('Error Please try a different email adress');
             return;
         }
-
+        if ( existingnumber2 || existingnumber3){
+            res.send('Error the service manager must have a different phone number');
+        }
         const existingDepartment = await Department.findOne({ where: { Name: department } });
 
         if (existingDepartment) {
@@ -190,7 +150,7 @@ exports.addChefService = async (req, res) => {
             // Handle department not found
         }
     } catch (error) {
-        // Handle error
+        console.log(error)
     }
 };
 exports.addTechnicien = async (req, res) => {
@@ -212,7 +172,6 @@ exports.addTechnicien = async (req, res) => {
 
     }
     age = req.body.Age
-    workhours = req.body.workHours
     department = req.body.Department
     var departmentCode = null
     if (req.body.Password)
@@ -225,12 +184,17 @@ exports.addTechnicien = async (req, res) => {
     try {
         const existingTechnicien = await ChefService.findOne({ where: { Email: email } });
         const existingMagazinier = await Magazinier.findOne({ where: { Email: email } });
+        const existingTechniciennumber = await ChefService.findOne({ where: { Phone: phone } });
+        const existingMagaziniernumber = await Magazinier.findOne({ where: { Phone: phone } });
 
         if (existingTechnicien || existingMagazinier) {
-            res.send('/error please try again');
+            res.send('EmailAlready existing ! ');
             return;
         }
-
+        if (existingTechniciennumber || existingMagaziniernumber) {
+            res.send('Phone number Already existing ! ');
+            return;
+        }
         const existingDepartment = await Department.findOne({ where: { Name: department } });
 
         if (existingDepartment) {
@@ -268,77 +232,83 @@ exports.addTechnicien = async (req, res) => {
 
 };
 exports.addMagazinier = async (req, res) => {
-    id = req.body.ID
-    fname = req.body.FName
-    lname = req.body.LName
-    address = req.body.Address
-    phone = req.body.Phone
-    email = req.body.Email
-    if (req.body.edit) {
-        image = req.body.Image
-    }
-    else {
-        image = req.file.path.split('\\')
-        if (image.length > 1)
-            image = req.file.path.split('\\').pop()
-        else
-            image = req.file.path.split('/').pop()
+  const id = req.body.ID;
+  const fname = req.body.FName;
+  const lname = req.body.LName;
+  const address = req.body.Address;
+  const phone = req.body.Phone;
+  const email = req.body.Email;
 
+  let image, age, departmentCode, pass;
+  
+  if (req.body.edit) {
+    image = req.body.Image;
+  } else {
+    image = req.file.path.split('\\');
+    if (image.length > 1) {
+      image = req.file.path.split('\\').pop();
+    } else {
+      image = req.file.path.split('/').pop();
     }
-    age = req.body.Age
-    department = req.body.Department
-    var departmentCode = null
-    if (req.body.Password)
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(req.body.Password, salt, (err, hash) => {
-                pass = hash
-            });
+  }
 
+  age = req.body.Age;
+  department = req.body.Department;
+
+  try {
+    const existingTechnicien = await Technicien.findOne({ where: { Email: email } });
+    const existingservicemanager = await ChefService.findOne({ where: { Email: email } });
+    const existingTechniciennumber = await Technicien.findOne({ where: { Phone: phone } });
+    const existingservicemanagernumber = await ChefService.findOne({ where: { Phone: phone } });
+
+    if (existingTechnicien || existingservicemanager) {
+      res.send('please choose a different email address');
+      return;
+    }
+    if (existingTechniciennumber || existingservicemanagernumber) {
+      res.send('please choose a different phone number');
+      return;
+    }
+
+    const existingDepartment = await Department.findOne({ where: { Name: department } });
+
+    if (existingDepartment) {
+      departmentCode = existingDepartment.Code;
+
+      const magasinier = await Magazinier.findByPk(id);
+
+      if (magasinier) {
+        magasinier.FName = fname;
+        magasinier.LName = lname;
+        magasinier.Adress = address;
+        magasinier.Phone = phone;
+        magasinier.Email = email;
+        magasinier.Age = age;
+        await magasinier.save();
+        res.redirect('/Magazinier');
+      } else {
+        await Magazinier.create({
+          FName: fname,
+          LName: lname,
+          Adress: address,
+          Phone: phone,
+          Image: image,
+          Email: email,
+          Age: age,
+          DepartmentCode: departmentCode,
+          Password: pass
         });
-    try {
-        const existingTechnicien = await Technicien.findOne({ where: { Email: email } });
-        const existingMagazinier = await ChefService.findOne({ where: { Email: email } });
-
-        if (existingTechnicien || existingMagazinier) {
-            res.send('/error please try again');
-            return;
-        }
-
-        const existingDepartment = await Department.findOne({ where: { Name: department } });
-
-        if (existingDepartment) {
-            departmentCode = existingDepartment.Code;
-            const magasinier = await Magazinier.findByPk(id);
-            if (magasinier) {
-                magasinier.FName = fname;
-                magasinier.LName = lname;
-                magasinier.Adress = address;
-                magasinier.Phone = phone;
-                magasinier.Email = email;
-                magasinier.Age = age;
-                await magasinier.save();
-                res.redirect('/Magazinier');
-            } else {
-                await Magazinier.create({
-                    FName: fname,
-                    LName: lname,
-                    Adress: address,
-                    Phone: phone,
-                    Image: image,
-                    Email: email,
-                    Age: age,
-                    DepartmentCode: departmentCode,
-                    Password: pass
-                });
-                res.redirect('/Magazinier');
-            }
-        } else {
-            // Handle department not found
-        }
-    } catch (error) {
-        // Handle error
+        res.redirect('/Magazinier');
+      }
+    } else {
+      res.send('Department not found'); // Handle department not found
     }
-}
+  } catch (error) {
+    console.log(error);
+    res.send('An error occurred'); // Handle error
+  }
+};
+
 
 
 exports.addEquipment = (req, res) => {
@@ -602,8 +572,8 @@ exports.addPanneTech = (req, res) => {
 
 }
 
-accountSid = 'AC9ad753430f8657f52d03db0c68c1d7a4';
-authToken = 'a32dbf18319ec04ca4c497013799ff03';
+accountSid = 'AC8c10989ddf3e03b9d4b62ed562050bf4';
+authToken = '16e8c76d5e2a1d1c9f8f8a9a5cfdf27a';
 const client = require('twilio')(accountSid, authToken);
 exports.addWorkOrder = (req, res) => {
     code = req.body.Code
@@ -622,11 +592,11 @@ exports.addWorkOrder = (req, res) => {
             equId = equipment.Code
             Technicien.findOne({ where: { ID: techID } }).then(technicien => {
                 if (technicien) {
-                    const technicianPhoneNumber = '+' + technicien.Phone;
+                    const technicianPhoneNumber = '+216' + technicien.Phone;
                     client.messages
                         .create({
                             body: ` Hello Mr ${technicien.FName} New work order assigned to you. Broken Equipment is ${equIName}`,
-                            from: '+13203012443',
+                            from: '+13158722073',
                             to: technicianPhoneNumber
                         })
                         .then(message => console.log(message.sid))

@@ -44,7 +44,8 @@ exports.signIn = (req, res) => {
                         req.session.ID = chefser.ID;
                         res.redirect('/index');
                     } else {
-                        res.redirect('/');
+                        // Show credentials error pop-up for ChefService
+                        res.render('newHome', { layout: false, error: 'Invalid credentials for Service manager' });
                     }
                 });
             } else {
@@ -58,7 +59,8 @@ exports.signIn = (req, res) => {
                                 req.session.ID = technicien.ID;
                                 res.redirect("/technicien/dialyInspection");
                             } else {
-                                res.redirect('/');
+                                // Show credentials error pop-up for Technicien
+                                res.render('newHome', { layout: false, error: 'Invalid credentials for Technician' });
                             }
                         });
                     } else {
@@ -72,11 +74,13 @@ exports.signIn = (req, res) => {
                                         req.session.ID = magazinier.ID;
                                         res.redirect("/agentSuppliers");
                                     } else {
-                                        res.redirect('/');
+                                        // Show credentials error pop-up for Magazinier
+                                        res.render('newHome', { layout: false, error: 'Invalid credentials for StoreKeeper' });
                                     }
                                 });
                             } else {
-                                res.redirect('/');
+                                // Show generic credentials error pop-up
+                                res.render('newHome', { layout: false, error: 'Invalid credentials' });
                             }
                         });
                     }
@@ -86,11 +90,14 @@ exports.signIn = (req, res) => {
     }
 };
 
+
+
+
 exports.home = (req, res) => {
     res.render('home', { pageTitle: 'Home', Home: true });
 }
 exports.index = (req, res) => {
-    res.render('index', { layout: 'ChefServiceLayout', pageTitle: "Welcome Chef Service" });
+    res.render('index', { layout: 'ChefServiceLayout', pageTitle: "Welcome service manager" });
 }
 exports.dialyInspectionTech = (req, res) => {
     TechID = req.session.ID
@@ -270,7 +277,7 @@ exports.ppmTechEquipment = (req, res) => {
                 LName: tech.LName
             }
             res.render('ppmForm', {
-                layout: 'TechnicienLayout', pageTitle: 'Dialy Inspection',
+                layout: 'TechnicienLayout', pageTitle: 'PPM',
                 PPM: true, ppm: Ppm, Code: code, Tech: Tech
             })
         })
@@ -327,14 +334,13 @@ exports.ppmTechEquipmentPost = (req, res) => {
 
 exports.department = (req, res) => {
     Department.findAll({
-        include: [{ model: Technicien }, { model: Equipment }]
+        include: [{ model: ChefService }, { model: Equipment }]
     }).then(departments => {
         const deps = departments.map(department => {
             return {
                 Name: department.Name,
                 Code: department.Code,
-                Location: department.Location,
-                Chef: department.Techniciens.length,
+                Chef: department.ChefServices.length,
                 Equipments: department.Equipment.length
             }
         })
@@ -550,7 +556,7 @@ exports.chefService = (req, res) => {
 
 
         res.render('chefService', {
-            pageTitle: 'chefService', CS: true,
+            pageTitle: 'Service Manager', CS: true,
             ChefdeService: chefservices, hasChef: chefservices.length > 0
         });
     })
@@ -583,7 +589,7 @@ exports.technicien = (req, res) => {
         })
 
         res.render('technicien', {
-            layout: 'ChefServiceLayout', pageTitle: 'Technicien', TE: true,
+            layout: 'ChefServiceLayout', pageTitle: 'Technician', TE: true,
             tech: techniciens, hasTech: techniciens.length > 0
         });
     })
@@ -613,13 +619,13 @@ exports.magazinier = (req, res) => {
 
         })
         res.render('magazinier', {
-            pageTitle: 'Magazinier', MG: true,
+            pageTitle: 'StoreKeeper', MG: true,
             mag: magaziniers, hasMag: magaziniers.length > 0
         });
     })
         .catch(err => {
             if (err)
-                res.render('error', { layout: false, pageTitle: 'Error', href: '/home', message: 'Sorry !!! Could Not Get Magaziniers' })
+                res.render('error', { layout: false, pageTitle: 'Error', href: '/home', message: 'Sorry !!! Could Not Get StoreKeeper' })
         })
 
 }
@@ -910,7 +916,6 @@ exports.installation = (req, res) => {
                 Model: equipment.Model,
                 SerialNumber: equipment.SerialNumber,
                 Manufacturer: equipment.Manufacturer,
-                Location: equipment.Location,
                 Notes: equipment.Notes,
                 DepartmentCode: equipment.Department.dataValues.Name,
                 AgentSupplierId: equipment.AgentSupplier.dataValues.Name

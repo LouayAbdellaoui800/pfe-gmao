@@ -23,7 +23,7 @@
                                     <th>Description</th>
                                     <th>BreakDown</th>
                                     <th>Equipment</th>
-                                    <th>Technicien</th>
+                                    <th>Technician</th>
                                     <th>SpareParts</th>
                                 </tr>
                             </thead>
@@ -36,7 +36,7 @@
                                     <td>{{this.StartDate}}</td>
                                     <td>{{this.EndDate}}</td>
                                     <td>{{this.Description}}</td>
-                                    <td>{{this.BreakDownCode}}{{this.BreakDownR}}</td>
+                                    <td>{{this.BreakDownCode}} {{this.BreakDownR}}</td>
                                     <td><img src="images/{{this.EquipmentImage}}" style="height: 50px; width:50px; border-radius: 50%;" >  {{this.EquipmentName}}-{{this.EquipmentCode}}</td>
                                     <td> <img src="images/{{this.TechnicienImage}}" style="height: 50px; width:50px; border-radius: 50%;" > {{this.Technicien}} </td>
                                     <td><img src="images/{{this.SparePartImage}}" style="height: 50px; width:50px; border-radius: 50%;" >  {{this.SparePartName}}</td>
@@ -99,7 +99,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class=" form-control-label">Panne Code</label>
+                            <label class=" form-control-label">Breakdowns  Code</label>
                             <select name="BreakDownID"required id="select" class="form-control">
                                 {{#each breakDowns}}
                                     <option value="{{this.Code}}">{{this.Code}} : {{this.Date}} ({{this.EquipmentName}}-{{this.EquipmentCode}}) {{this.Reason}}</option>

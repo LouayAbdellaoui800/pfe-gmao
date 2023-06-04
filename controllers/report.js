@@ -31,7 +31,6 @@ Equipment.findAll({where:{DepartmentCode:code},include:[{model:AgentSupplier}]})
               Model:equipment.Model,
               SerialNumber:equipment.SerialNumber,
               Manufacturer:equipment.Manufacturer,
-              Location:equipment.Location,
               Agent:equipment.AgentSupplier.Name
             }
     
@@ -105,7 +104,7 @@ exports.agentSparePartsReport=(req,res)=>{
                 return {
                   Code:sparepart.Code,
                   Name:sparepart.Name,
-                  Amount:sparepart.Amount
+                  SerialNumber:sparepart.SerialNumber
                 }
               })
               res.render('reportAgentSpareParts',{layout:'agentReportLayout',pageTitle:'Spare Parts',
@@ -138,7 +137,7 @@ exports.agentEquipmentsReport=(req,res)=>{
                     Model:equipment.Model,
                     SerialNumber:equipment.SerialNumber,
                     Manufacturer:equipment.Manufacturer,
-                    Location:equipment.Location,
+                    LifeSpanDate:equipment.LifeSpanDate,
                     Department:equipment.Department.Name
                 }
               })
@@ -302,7 +301,7 @@ exports.equipmentPpmReport=(req,res) => {
                 return{
                     Code:report.Code,
                     DATE:report.DATE,
-                    Engineer:report.Technicien.FName +' '+ report.Technicien.LName ,
+                    Tech:report.Technicien.FName +' '+ report.Technicien.LName ,
                     Equipment:report.Equipment.Name,
                     EquipmentModel:report.Equipment.Model
                 }
@@ -329,7 +328,7 @@ exports.PpmReport = (req,res) =>{
     PPM.findOne({where:{Code:code},include:[{model:Technicien},{model:Equipment}]}).then(report =>{
        const rep = {
            DATE:report.DATE,
-           Engineer:report.Technicien.FName+' '+report.Technicien.LName,
+           Tech:report.Technicien.FName+' '+report.Technicien.LName,
            EquipmentName:report.Equipment.Name,
            EquipmentCode:report.Equipment.Code,
            EquipmentModel:report.Equipment.Model,

@@ -32,17 +32,7 @@
                                     <td>{{this.DATE}}</td>
                                     <td>{{this.Department}}</td>
                                     <td> <img src="images/{{this.EquipmentImage}}" style="height: 50px; width:50px; border-radius: 50%;" >  {{this.EquipmentName}}-{{this.EquipmentCode}}</td>
-                                    <td>
-                                        <div class="table-data-feature">
-                                                <a href="/technicien/panne/edit/{{ this.Code }}" class="item" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                    <i class="zmdi zmdi-edit"></i>
-                                                </a>
-                                                <a href="/technicien/panne/delete/{{ this.Code }}" class="item" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                    <i class="zmdi zmdi-delete"></i>
-                                                </a>
-
-                                        </div>
-                                    </td>
+                                 
                                 </tr>
                                 <tr class="spacer"></tr>
                              {{/each }} 

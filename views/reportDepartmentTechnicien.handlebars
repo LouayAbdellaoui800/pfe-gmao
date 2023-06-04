@@ -5,7 +5,7 @@
                 <h2> Department : {{ name }}</h2>
                 
             </div>
-            <h3> Chef Service:</h3>
+            <h3> service manager:</h3>
             </br>
             <div class="table-responsive m-b-40">
                 <table class="table table-borderless table-data3">
@@ -17,7 +17,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Age</th>
-                            <th>Work Hours</th>
+                            
                         </tr>
                     </thead>
                    {{#if hasEngineers}} 
@@ -30,7 +30,7 @@
                             <td>0{{this.Phone}}</td>
                             <td>{{this.Email}}</td>
                             <td>{{this.Age}}</td>
-                            <td>{{this.WorkHours}}</td>
+                           
                         </tr>
                        {{/each}} 
                     </tbody>

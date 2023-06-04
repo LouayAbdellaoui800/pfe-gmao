@@ -133,7 +133,6 @@ exports.editEquipment=(req,res)=>{
               Model:equipment.Model,
               SerialNumber:equipment.SerialNumber,
               Manufacturer:equipment.Manufacturer,
-              Location:equipment.Location,
               Notes:equipment.Notes,
               PM:equipment.PM,
               Image:equipment.Image,
@@ -161,7 +160,7 @@ exports.editEquipment=(req,res)=>{
        const sp = {
              Name: sparePart.Name,
              Code: sparePart.Code,
-             Amount:sparePart.Amount,
+             SerialNumber:sparePart.SerialNumber,
              Image:sparePart.Image,
              AgentSupplierId:sparePart.AgentSupplierId,
              EquipmentCode:sparePart.EquipmentCode

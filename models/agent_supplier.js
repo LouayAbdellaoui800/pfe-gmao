@@ -23,7 +23,8 @@ Phone:{
     },
 Email:{
     type:Sequelize.STRING,
-    allowNull:false,    
+    allowNull:false,  
+    unique : true  
     },
 Notes:{
     type:Sequelize.TEXT,

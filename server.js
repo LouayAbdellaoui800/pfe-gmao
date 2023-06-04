@@ -30,11 +30,12 @@ const reportController=require('./routes/report')
 
 
 const app = express();
+const speech=require('./public/js/narrator');
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:false}))
 const PORT = process.env.PORT || 4000
-const server = app.listen(PORT, () => console.log(`💬 server on port ${PORT}`))
+const server = app.listen(PORT, () => console.log(`server on port ${PORT}`))
 const io = require('socket.io')(server)
 let socketsConected = new Set()
 
