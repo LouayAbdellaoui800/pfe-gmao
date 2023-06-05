@@ -27,7 +27,7 @@ function checkUserRoleForAdmin(req, res, next) {
 }
 function checkUserRoleForMag(req, res, next) {
   if (req.user.role === 'magazinier') {
-    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+    return res.redirect("/403.html");
   } else {
     next();
   }
@@ -61,4 +61,6 @@ router.post('/technicien/panne/add',/* authMiddleware *//* ,checkUserRole, */add
 router.post('/workOrder/add',/* authMiddleware *//* ,checkUserRole, */addController.addWorkOrder)
 router.post('/maintenance/add',/* authMiddleware *//* ,checkUserRole, */addController.addMaintenance)
 router.post('/Etat/add',/* authMiddleware *//* ,checkUserRole, */addController.workorderEtat)
+router.post('/equipments/add',/* authMiddleware *//* ,checkUserRole, */addController.addEquipmentMG)
+
 module.exports=router;

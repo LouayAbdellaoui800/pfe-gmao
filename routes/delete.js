@@ -28,7 +28,7 @@ function checkUserRoleForAdmin(req, res, next) {
 }
 function checkUserRoleForMag(req, res, next) {
   if (req.user.role === 'magazinier') {
-    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+    return res.redirect("/403.html");
   } else {
     next();
   }

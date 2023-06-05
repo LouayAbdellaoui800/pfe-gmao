@@ -130,20 +130,20 @@ exports.editEquipment=(req,res)=>{
               InstallationDate: equipment.InstallationDate,
               WarrantyDate: equipment.WarrantyDate,
               ArrivalDate: equipment.InstallationDate,
+              LifeSpanDate:equipment.LifeSpanDate,
               Model:equipment.Model,
               SerialNumber:equipment.SerialNumber,
               Manufacturer:equipment.Manufacturer,
               Notes:equipment.Notes,
-              PM:equipment.PM,
+              PMP:equipment.PMP,
               Image:equipment.Image,
               DepartmentCode:equipment.DepartmentCode,
               AgentSupplierId:equipment.AgentSupplierId,
               informatique:equipment.Department.Name =='informatique' ? true : false,
-              Mecanique:equipment.Department.Name =='Mecanique' ? true:false,
-              Industrielle:equipment.Department.Name=='Industrielle' ? true:false,
+      
             }
      
-   res.render('editEquipment',{layout:'MagazinierLayout.handlebars' ,pageTitle:'Edit',
+   res.render('editEquipment',{layout:'ChefServiceLayout.handlebars' ,pageTitle:'Edit',
                                       Equipment:true,equipment:eq});  
     
         
@@ -152,9 +152,39 @@ exports.editEquipment=(req,res)=>{
 
  }
 
+exports.editEquipmentMG=(req,res)=>{
+    code=req.params.id
+    Equipment.findOne({where:{Code:code},include:[{model:Department}]}).then(equipment => {
+        const eq = {
+              Code: equipment.Code,
+              Name: equipment.Name,
+              Cost: equipment.Cost,
+              InstallationDate: equipment.InstallationDate,
+              WarrantyDate: equipment.WarrantyDate,
+              ArrivalDate: equipment.InstallationDate,
+              LifeSpanDate:equipment.LifeSpanDate,
+              Model:equipment.Model,
+              SerialNumber:equipment.SerialNumber,
+              Manufacturer:equipment.Manufacturer,
+              Notes:equipment.Notes,
+              PMP:equipment.PMP,
+              Image:equipment.Image,
+              DepartmentCode:equipment.DepartmentCode,
+              AgentSupplierId:equipment.AgentSupplierId,
+              informatique:equipment.Department.Name =='informatique' ? true : false,
+      
+            }
+     
+   res.render('editEquipments',{layout:'MagazinierLayout.handlebars' ,pageTitle:'Edit',
+                                      Equipment:true,equipment:eq});  
+    
+        
+ })
+    .catch(err => console.log("ERROR!!!!!!",err) )
 
+ }
 
- exports.editSparePart=(req,res)=>{
+exports.editSparePart=(req,res)=>{
    code=req.params.id
    SparePart.findByPk(code).then(sparePart =>{ 
        const sp = {
@@ -247,7 +277,7 @@ exports.editMaintenance=(req,res)=>{
          Id:maintenance.Id,
          StartDate:maintenance.StartDate,
          EndDate:maintenance.EndDate,
-         BreakDownCode:maintenance.BreakDownCode,
+         BreakDownCode:maintenance.PanneCode,
          Description:maintenance.Description,
          TechnicienID:maintenance.TechnicienID
          

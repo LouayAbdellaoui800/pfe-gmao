@@ -11,7 +11,7 @@
                                     <img src="images/icon/logo-mini.png" alt="Cool Admin" /> <strong>MAO</strong></a>        
                                 </div>
                                 <div class="login-form" style="height: auto;">
-                                    <form action="/equipment/add" method="POST">
+                                    <form action="/equipments/add" method="POST">
                                             <input type="text"  hidden  name="Image" value="{{equipment.Image}}" >
                                             <input type="text"  hidden  name="edit" value="edit" >
                                             <input type="text"  hidden  name="Code" value="{{ equipment.Code }}" >
@@ -29,7 +29,7 @@
                                             </div>
                                              <div class="form-group">
                                                 <label class=" form-control-label">LifeSpan Date</label>
-                                                <input type="date" required name="LifeSpanDate" placeholder="Enter LifeSpans Date" value="{{ equipment.LifeSpanDate}}" class="form-control">
+                                                <input type="date" required name="LifeSpanDate" placeholder="Enter LifeSpan Date" value="{{ equipment.LifeSpanDate}}" class="form-control">
                                             </div>
                                             <div class="form-group">
                                                 <label class=" form-control-label">Arrival Date</label>

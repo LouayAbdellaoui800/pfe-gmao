@@ -238,8 +238,9 @@ exports.addMagazinier = async (req, res) => {
   const address = req.body.Address;
   const phone = req.body.Phone;
   const email = req.body.Email;
+  const pass = req.body.Password;
 
-  let image, age, departmentCode, pass;
+  let image, age, departmentCode;
   
   if (req.body.edit) {
     image = req.body.Image;
@@ -334,7 +335,7 @@ exports.addEquipment = (req, res) => {
     lifespan = req.body.LifeSpanDate
     department = req.body.Department
     agent = req.body.Agent
-    pm = req.body.PM
+    pm = req.body.PMP
     notes = req.body.Notes
     var departmentCode = null
     var agentCode = null
@@ -390,6 +391,7 @@ exports.addEquipment = (req, res) => {
 }
 
 exports.addEquipmentMG = (req, res) => {
+    code = req.body.Code
     name = req.body.Name
     cost = req.body.Cost
     if (req.body.edit) {
@@ -573,7 +575,7 @@ exports.addPanneTech = (req, res) => {
 }
 
 accountSid = 'AC8c10989ddf3e03b9d4b62ed562050bf4';
-authToken = '16e8c76d5e2a1d1c9f8f8a9a5cfdf27a';
+authToken = '540bbef39a46b55c6957d9aab16faefe';
 const client = require('twilio')(accountSid, authToken);
 exports.addWorkOrder = (req, res) => {
     code = req.body.Code

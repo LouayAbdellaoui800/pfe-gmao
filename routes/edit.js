@@ -28,7 +28,7 @@ function checkUserRoleForAdmin(req, res, next) {
 }
 function checkUserRoleForMag(req, res, next) {
   if (req.user.role === 'magazinier') {
-    return res.render("403",{layout:false,href:'/',pageTitle:'401 Error'});
+    return res.redirect("/403.html");
   } else {
     next();
   }
@@ -61,6 +61,7 @@ router.get('/breakDown/edit/:id',/* authMiddleware,checkUserRole, */editControll
 router.get('/technicien/panne/edit/:id',/* authMiddleware,checkUserRole, */editController.editPanneTech);
 router.get('/workOrder/edit/:id',/* authMiddleware,checkUserRole, */editController.editWorkOrder);
 router.get('/maintenance/edit/:id',/* authMiddleware,checkUserRole, */editController.editMaintenance);
+router.get('/equipments/edit/:id',/* authMiddleware,checkUserRole, */editController.editEquipmentMG);
 
 
 
