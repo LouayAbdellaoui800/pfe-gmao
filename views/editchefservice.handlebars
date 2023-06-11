@@ -34,8 +34,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label class=" form-control-label">Age</label>
-                                            <input type="text" required name="Age" placeholder="New Age"
-                                                value="{{ chefService.Age}}" class="form-control">
+                                            <input type="number" required name="Age" placeholder="New Age"
+                                                value="{{ chefService.Age}}"  class="form-control" maxlength="2" max="50" min="18">
                                         </div>
                                         <div class="form-group">
                                             <label class=" form-control-label">Email</label>

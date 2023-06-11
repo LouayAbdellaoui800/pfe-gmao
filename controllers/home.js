@@ -712,7 +712,7 @@ exports.agentSupplier = (req, res) => {
             }
         })
 
-        res.render('agentSupplier', {
+        res.render('viewagent', {
             layout: "MagazinierLayout", pageTitle: 'AgentSupplier',
             AS: true, agentSuppliers: as,
             hasAgentSupplier: as.length > 0

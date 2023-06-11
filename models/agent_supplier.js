@@ -20,6 +20,7 @@ Adress:{
 Phone:{
     type:Sequelize.BIGINT(20),
     allowNull:false,
+    unique:true
     },
 Email:{
     type:Sequelize.STRING,

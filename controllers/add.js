@@ -61,21 +61,20 @@ exports.addAgentSupplier = async (req, res) => {
         await agentSupplier.save();
       } else {
         await AgentSupplier.create({
-          Id,
-          Name,
+          Name:Name,
           Adress: Address,
-          Phone,
-          Email,
-          Notes,
+          Phone:Phone,
+          Email:Email,
+          Notes:Notes
         });
       }
   
       res.redirect('/agentSupplier');
     } catch (error) {
       console.log('ERROR!!!!!!', error);
-      res.send("Email adress already existing !! ")
+      res.send("Email adress or phone number already existing !! ")
     }
-  };
+};
 
 exports.addChefService = async (req, res) => {
     const id = req.body.ID;
@@ -238,7 +237,6 @@ exports.addMagazinier = async (req, res) => {
   const address = req.body.Address;
   const phone = req.body.Phone;
   const email = req.body.Email;
-  const pass = req.body.Password;
 
   let image, age, departmentCode;
   
@@ -252,7 +250,11 @@ exports.addMagazinier = async (req, res) => {
       image = req.file.path.split('/').pop();
     }
   }
-
+  let pass ; 
+   if (req.body.Password) {
+        const salt = await bcrypt.genSalt(10);
+        pass = await bcrypt.hash(req.body.Password, salt);
+   }
   age = req.body.Age;
   department = req.body.Department;
 
@@ -303,11 +305,10 @@ exports.addMagazinier = async (req, res) => {
       }
     } else {
       res.send('Department not found'); // Handle department not found
-    }
-  } catch (error) {
+    }}catch (error) {
     console.log(error);
     res.send('An error occurred'); // Handle error
-  }
+  };
 };
 
 
